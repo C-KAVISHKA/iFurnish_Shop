@@ -3,29 +3,17 @@ import { Link } from "react-router-dom";
 import { FaStar } from "react-icons/fa6";
 import { motion } from "framer-motion";
 
-const fadeDown = (delay) => {
-  return {
-    hidden: { opacity: 0, y: -100 },
-    show: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        delay: delay,
-        duration: 0.5,
-      },
-    },
-  };
-};
-
 const fadeUp = (delay) => {
   return {
-    hidden: { opacity: 0, y: 100 },
+    hidden: { opacity: 0, y: 30 },
     show: {
       opacity: 1,
       y: 0,
       transition: {
         delay: delay,
         duration: 0.5,
+        type: "spring",
+        damping: 20
       },
     },
   };
@@ -33,36 +21,34 @@ const fadeUp = (delay) => {
 
 const Item = ({ product }) => {
   return (
-    <div className="bottom-12 relative">
+    <div className="group flex flex-col justify-between overflow-hidden bg-white border border-gray-100 rounded-3xl p-4 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
       <Link
         to={`/product/${product._id}`}
-        className="relative flexCenter top-12 overflow-hidden m-2.5 rounded-xl"
+        className="relative overflow-hidden rounded-2xl bg-gray-50 flexCenter h-48 w-full mb-3"
       >
         <motion.img
-          variants={fadeUp(0.6)}
+          variants={fadeUp(0.1)}
           initial="hidden"
           whileInView="show"
+          viewport={{ once: true }}
           src={product.image[0]}
-          className="w-60 rounded-xl h-60 object-cover sm:w-48 sm:h-48 xs:w-40 xs:h-40 bg-[#f1f1f17f]"
+          className="h-40 w-auto object-contain transition-transform duration-500 group-hover:scale-105"
         />
       </Link>
-      <div className="p-3 rounded-lg pt-12 h-52 bg-white shadow border-2 border-gray-400 ">
-        <h4
-          variants={fadeUp(1)}
-          initial="hidden"
-          whileInView="show"
-          className="bold-15 line-clamp-1 lmy-0"
-        >
+      <div className="flex flex-col flex-1">
+        <h4 className="bold-15 line-clamp-1 text-gray-800 group-hover:text-secondary transition duration-300">
           {product.name}
         </h4>
-        <div className="flexBetween pt-1">
-          <h5 className="h5 pr-2">${product.price}.00</h5>
-          <div className="flex items-baseline gap-x-1">
-            <FaStar className="text-yellow-400" />
-            <h5 className="h5 relative bottom-0.5">4.8</h5>
+        <div className="flexBetween mt-1.5 mb-2">
+          <h5 className="h5 text-gray-900 font-semibold">${product.price}.00</h5>
+          <div className="flex items-center gap-x-0.5">
+            <FaStar className="text-yellow-400 text-xs" />
+            <h5 className="h5 text-xs text-gray-500 relative top-[0.5px]">4.8</h5>
           </div>
         </div>
-        <p className="line-clamp-5 py-1">{product.description}</p>
+        <p className="line-clamp-3 text-xs text-gray-500 leading-relaxed">
+          {product.description}
+        </p>
       </div>
     </div>
   );

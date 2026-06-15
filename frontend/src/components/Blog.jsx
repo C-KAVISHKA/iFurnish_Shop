@@ -68,32 +68,42 @@ export default function Blog() {
         title1Styles={"pb-10"}
         paraStyles={"!block"}
       />
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 lg:grid-cols-3 gap-5">
-        {blogs.map((blog) => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {blogs.map((blog, idx) => (
           <div
-            key={blog.name}
-            className="rounded-3xl border-[11px] border-primary overflow-hidden relative"
+            key={blog.name || idx}
+            className="bg-white border border-gray-100/60 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col"
           >
-            <motion.img
-              variants={fadeDown(0.4)}
-              initial="hidden"
-              whileInView="show"
-              src={blog.image}
-              alt={blog.name}
-            />
-            <div className="absolute top-0 left-0 h-full w-full bg-black/25" />
-            <div className="absolute bottom-4 left-4 text-white text-[15px]">
-              <motion.h3
-                variants={fadeDown(0.8)}
+            <div className="relative overflow-hidden group h-[200px]">
+              <motion.img
+                variants={fadeDown(0.4)}
                 initial="hidden"
                 whileInView="show"
-                className="font-[600] text-[16px] pr-4 leading-5"
-              >
-                {blog.title}
-              </motion.h3>
-              {/* <h4 className='medium-14 pb-3 pt-1'>{blog.category}</h4> */}
-              <button className="bg-primary text-white px-4 py-1 mt-2 rounded-full">
-                Read More
+                src={blog.image}
+                alt={blog.name}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+              <div className="absolute top-3 left-3 bg-secondary text-white text-[10px] font-bold tracking-wider px-3 py-1 rounded-full uppercase">
+                {blog.category || "Design"}
+              </div>
+            </div>
+            
+            <div className="p-6 flex flex-col flex-grow justify-between">
+              <div>
+                <motion.h3
+                  variants={fadeDown(0.6)}
+                  initial="hidden"
+                  whileInView="show"
+                  className="font-bold text-gray-800 text-base leading-snug mb-2 hover:text-secondary transition-colors"
+                >
+                  {blog.title}
+                </motion.h3>
+                <p className="text-gray-500 text-xs leading-relaxed line-clamp-3">
+                  Discover professional insights, style trends, and design tricks curated by our interior experts to help elevate your home.
+                </p>
+              </div>
+              <button className="text-secondary hover:text-secondary/80 font-bold text-xs mt-4 inline-flex items-center gap-x-1 transition-colors self-start">
+                Read More &rarr;
               </button>
             </div>
           </div>

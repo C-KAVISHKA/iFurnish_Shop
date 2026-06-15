@@ -15,7 +15,7 @@ export const ContactInfo = () => {
       {/* Contact Details */}
       <div className="space-y-6 flex-1">
         <ContactItem icon={<Phone size={22} />} text="+94 775434 344" />
-        <ContactItem icon={<Mail size={22} />} text="furnionline@gmail.com" />
+        <ContactItem icon={<Mail size={22} />} text="ifurnishshop@gmail.com" />
         <ContactItem 
           icon={<MapPin size={22} />} 
           text={
@@ -35,11 +35,11 @@ export const ContactInfo = () => {
       </div>
 
       {/* Round Bubbles with Borders */}
-      <div className="absolute bottom-4 left-10 w-16 h-16 rounded-full border-4 border-[#4dd0e1] opacity-60 blur-xl animate-pulse"></div>
-      <div className="absolute bottom-6 left-1/4 w-12 h-12 rounded-full border-4 border-[#38b5c1] opacity-70 blur-xl animate-pulse delay-200"></div>
+      <div className="absolute bottom-4 left-10 w-16 h-16 rounded-full border-4 border-[#b85840] opacity-60 blur-xl animate-pulse"></div>
+      <div className="absolute bottom-6 left-1/4 w-12 h-12 rounded-full border-4 border-[#d97706] opacity-70 blur-xl animate-pulse delay-200"></div>
       <div className="absolute bottom-8 left-1/2 w-14 h-14 rounded-full border-4 border-[#0f374d] opacity-50 blur-xl animate-pulse delay-400"></div>
-      <div className="absolute bottom-6 right-10 w-16 h-16 rounded-full border-4 border-[#4dd0e1] opacity-60 blur-xl animate-pulse delay-600"></div>
-      <div className="absolute bottom-8 right-1/4 w-12 h-12 rounded-full border-4 border-[#38b5c1] opacity-70 blur-xl animate-pulse delay-800"></div>
+      <div className="absolute bottom-6 right-10 w-16 h-16 rounded-full border-4 border-[#b85840] opacity-60 blur-xl animate-pulse delay-600"></div>
+      <div className="absolute bottom-8 right-1/4 w-12 h-12 rounded-full border-4 border-[#d97706] opacity-70 blur-xl animate-pulse delay-800"></div>
     </div>
   );
 };
@@ -47,7 +47,7 @@ export const ContactInfo = () => {
 // Contact Item Component
 const ContactItem = ({ icon, text }) => (
   <div className="flex items-start gap-4 p-3 rounded-lg transition-all duration-300 hover:bg-white/10 hover:scale-[1.02]">
-    <div className="text-[#4dd0e1]">{icon}</div>
+    <div className="text-[#b85840]">{icon}</div>
     <span className="text-white">{text}</span>
   </div>
 );
@@ -56,7 +56,7 @@ const ContactItem = ({ icon, text }) => (
 const SocialIcon = ({ href, icon }) => (
   <a 
     href={href} 
-    className="text-[#4dd0e1] hover:text-white transition-all duration-300"
+    className="text-[#b85840] hover:text-white transition-all duration-300"
     target="_blank"
     rel="noopener noreferrer"
   >

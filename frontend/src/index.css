@@ -8,7 +8,11 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Inter", system-ui;
+  font-family: "Outfit", "Inter", system-ui;
+}
+
+body {
+  background-color: #faf8f6;
 }
 
 /* width */
@@ -64,7 +68,11 @@
 
 @layer utilities {
   .active-link {
-    @apply px-3 py-2 rounded-full bg-secondary text-white;
+    @apply bg-secondary/10 text-secondary border border-secondary/20 shadow-sm transition-all duration-300 font-semibold;
+  }
+
+  .link-inactive {
+    @apply text-gray-50 hover:text-secondary transition-all duration-300 font-medium;
   }
 
   .btn-white {
@@ -277,5 +285,19 @@
   }
   .bold-14 {
     @apply text-[14px] font-[700];
+  }
+
+  .glassmorphism {
+    background: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+  }
+
+  .glassmorphism-dark {
+    background: rgba(15, 23, 42, 0.45);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
   }
 }

@@ -9,6 +9,7 @@ import { RiAiGenerate } from "react-icons/ri";
 import { ShopContext } from "../context/ShopContext";
 import { ProductContext } from "../context/ProductContext";
 import { motion } from "framer-motion";
+import chatbotIcon from "../assets/chatbot2.png";
 
 const Header = () => {
   const { getCartCount, navigate } = useContext(ShopContext);
@@ -32,9 +33,9 @@ const Header = () => {
     <header className="w-full px-4 sm:px-6 lg:px-8">
       <div className="flex items-center justify-between py-2 sm:py-3">
         {/* Logo - Responsive sizing */}
-        <Link to="/" className="flex items-center">
-          <div className="text-xl font-bold sm:text-2xl md:text-3xl">
-            Furni<span className="text-secondary">Online</span>
+        <Link to="/" className="flex items-center gap-x-2">
+          <div className="text-xl font-bold sm:text-2xl md:text-3xl tracking-tight text-tertiary">
+            iFurnish<span className="text-secondary font-semibold">Shop</span>
           </div>
         </Link>
 
@@ -101,7 +102,7 @@ const Header = () => {
           {/* AI Assistant */}
           <Link to="/ai-assistant" className="relative cursor-pointer flex">
             <motion.img
-              src="https://firebasestorage.googleapis.com/v0/b/quickbuy-assign.appspot.com/o/chatbot2.png?alt=media&token=601dceb5-9d7b-4f69-97f0-208cdf0e1754"
+              src={chatbotIcon}
               alt="chatbot"
               className="w-6 h-6 xs:w-7 xs:h-7 sm:w-8 sm:h-8"
               animate={{

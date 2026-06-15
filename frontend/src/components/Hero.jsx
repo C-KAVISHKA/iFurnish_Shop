@@ -40,6 +40,24 @@ const fadeUp = (delay) => {
   };
 };
 
+const textContainerVariants = {
+  hidden: { opacity: 0 },
+  show: (delay = 0.4) => ({
+    opacity: 1,
+    transition: { staggerChildren: 0.12, delayChildren: delay },
+  }),
+};
+
+const wordVariants = {
+  hidden: { opacity: 0, y: 35, rotateX: 30 },
+  show: {
+    opacity: 1,
+    y: 0,
+    rotateX: 0,
+    transition: { type: "spring", damping: 15, stiffness: 120 },
+  },
+};
+
 const Hero = () => {
   const [currentVideo, setCurrentVideo] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -65,9 +83,12 @@ const Hero = () => {
   const handleMouseEnter = () => setShowControls(true);
   const handleMouseLeave = () => setShowControls(false);
   return (
-    <section className="max-padd-container bg-hero bg-cover bg-center bg-no-repeat h-[667px] w-full mb-10 relative">
+    <section className="max-padd-container bg-hero bg-cover bg-center bg-no-repeat h-[667px] w-full mb-10 relative rounded-[2.5rem] overflow-hidden shadow-2xl">
+      {/* Dark overlay for rich contrast */}
+      <div className="absolute inset-0 bg-black/25 z-0"></div>
+
       <div
-        className="relative bg-white p-3 rounded-2xl max-w-[233px] top-8 xl:top-12 transition-all duration-300"
+        className="relative z-10 glassmorphism p-3 rounded-[1.75rem] max-w-[233px] top-8 xl:top-12 shadow-2xl border border-white/30 transition-all duration-300 hover:scale-105"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
@@ -77,7 +98,7 @@ const Hero = () => {
             src={videoFiles[currentVideo]}
             height={211}
             width={211}
-            className="rounded-3xl mb-3 transition-opacity duration-300"
+            className="rounded-2xl mb-3 transition-opacity duration-300"
             autoPlay
             loop={false}
             muted
@@ -122,37 +143,45 @@ const Hero = () => {
         </div>
 
         {/* Description */}
-        <p className="text-[13px]">
-          <b className="uppercase">UNLOCK</b> your dream home with our curated
+        <p className="text-[13px] text-white/90">
+          <b className="uppercase text-secondary">UNLOCK</b> your dream home with our curated
           furniture selection
         </p>
       </div>
 
-      <div className="mt-12 sm:mt-20 xl:mt-40 max-w-[777px]">
+      <div className="relative z-10 mt-12 sm:mt-20 xl:mt-40 max-w-[777px]">
         <motion.h5
           variants={fadeDown(0.4)}
           initial="hidden"
           whileInView="show"
-          className="flex items-baseline gap-x-2 uppercase text-secondary medium-18"
+          className="flex items-center gap-x-2 uppercase text-secondary tracking-widest text-xs font-bold mb-4"
         >
           URBAN AESTHETIC <BsFire />
         </motion.h5>
         <motion.h1
-          variants={fadeUp(0.7)}
+          variants={textContainerVariants}
+          custom={0.6}
           initial="hidden"
           whileInView="show"
-          className="h1 font-[500] capitalize max-w-[722px] text-white"
-          style={{ fontFamily: "'Dancing Script', cursive" }}
+          viewport={{ once: true }}
+          className="h1 font-extrabold capitalize max-w-[722px] text-white flex flex-wrap gap-x-3 gap-y-2 py-1 overflow-hidden"
+          style={{ fontFamily: "'Playfair Display', serif", lineHeight: "1.1" }}
         >
-          Visualise furniture in your space with AR
+          {"Visualise furniture in your space with AR".split(" ").map((word, idx) => (
+            <span key={idx} className="inline-block overflow-hidden">
+              <motion.span variants={wordVariants} className="inline-block origin-bottom">
+                {word}
+              </motion.span>
+            </span>
+          ))}
         </motion.h1>
-        <div className="flex">
+        <div className="flex mt-8">
           <Link
             to={"/collection"}
-            className="bg-white text-xs font-medium pl-5 rounded-full flexCenter gap-x-2 group"
+            className="bg-white hover:bg-slate-50 text-gray-800 text-sm font-semibold pl-6 rounded-full flexCenter gap-x-4 group shadow-lg transition duration-300 hover:shadow-xl"
           >
             Check Our Modern Collection
-            <FaArrowRight className="bg-secondary text-white rounded-full w-11 h-11 p-3 m-[3px] border border-white group-hover:-rotate-[20deg] transition-all duration-500" />
+            <FaArrowRight className="bg-secondary text-white rounded-full w-12 h-12 p-3.5 m-[3px] border border-white group-hover:-rotate-[20deg] transition-all duration-500" />
           </Link>
         </div>
       </div>

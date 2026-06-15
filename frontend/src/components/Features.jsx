@@ -66,63 +66,67 @@ const Features = () => {
             />
           </motion.div>
         </div>
-        <div className="flexCenter flex-wrap sm:flex-nowrap gap-x-5">
-          <div className="p-4 rounded-3xl">
+        <div className="flexCenter flex-wrap lg:flex-nowrap gap-6 mt-12">
+          <div className="flex-1 bg-white border border-gray-100 p-8 rounded-[2rem] shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 min-h-[260px] flex flex-col justify-between">
             <motion.h4
-              variants={fadeDown(1)}
+              variants={fadeDown(0.2)}
               initial="hidden"
               whileInView="show"
-              className="h4 capitalize"
+              className="h4 capitalize text-secondary font-bold text-lg mb-3"
             >
-              AR Powered
+              AR Powered Space Visualizer
             </motion.h4>
             <motion.p
-              variants={fadeUp(1.2)}
+              variants={fadeUp(0.4)}
               initial="hidden"
               whileInView="show"
-              className="justify"
+              className="text-gray-500 text-sm leading-relaxed"
             >
               Transform the way you shop for furniture with our cutting-edge
               AR-powered experience! Visualize how each piece fits into your
               space in real-time, explore different styles, colors, and
-              arrangements, and make confident decisions before you buy. Say
-              goodbye to guesswork and hello to a seamless, immersive shopping
-              experience!
+              arrangements, and make confident decisions before you buy.
             </motion.p>
           </div>
-          <div className="p-4 rounded-3xl">
+          
+          <div className="flex-1 bg-white border border-gray-100 p-8 rounded-[2rem] shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 min-h-[260px] flex flex-col justify-between">
             <motion.h4
-              variants={fadeDown(1.4)}
+              variants={fadeDown(0.4)}
               initial="hidden"
               whileInView="show"
-              className="h4 capitalize"
+              className="h4 capitalize text-secondary font-bold text-lg mb-3"
             >
-              Secure Payment
+              Secure Checkout & Payments
             </motion.h4>
             <motion.p
-              variants={fadeUp(1.6)}
+              variants={fadeUp(0.6)}
               initial="hidden"
               whileInView="show"
+              className="text-gray-500 text-sm leading-relaxed"
             >
               Enjoy a safe and seamless shopping experience with our highly
               secure payment options. We use advanced encryption and trusted
               payment gateways to protect your transactions, ensuring your
-              personal and financial information remains safe. Shop for your
-              perfect furniture with confidence, knowing that your payments are
-              secure, reliable, and hassle-free
+              personal and financial information remains safe.
             </motion.p>
           </div>
-          <div className="p-4 rounded-3xl">
+          
+          <div className="flex-1 bg-white border border-gray-100 p-8 rounded-[2rem] shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 min-h-[260px] flex flex-col justify-between">
             <motion.h4
-              variants={fadeDown(1.8)}
+              variants={fadeDown(0.6)}
               initial="hidden"
               whileInView="show"
-              className="h4 capitalize "
+              className="h4 capitalize text-secondary font-bold text-lg mb-3"
             >
-              AI Powered
+              Smart AI Recommendation
             </motion.h4>
-            <motion.p variants={fadeUp(2)} initial="hidden" whileInView="show">
-            Discover the perfect furniture effortlessly with our AI-powered recommendation system! Simply upload an image, and our smart AI will suggest matching products tailored to your style. Plus, get personalized design advice from our AI Assistant, making your shopping experience seamless and hassle-free!
+            <motion.p 
+              variants={fadeUp(0.8)} 
+              initial="hidden" 
+              whileInView="show"
+              className="text-gray-500 text-sm leading-relaxed"
+            >
+              Discover the perfect furniture effortlessly with our AI-powered recommendation system! Simply upload an image, and our smart AI will suggest matching products tailored to your style. Plus, get personalized design advice from our AI Assistant.
             </motion.p>
           </div>
         </div>

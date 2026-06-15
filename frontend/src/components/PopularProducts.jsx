@@ -22,9 +22,7 @@ const PopularProducts = () => {
       />
       <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8">
         {popularProducts.map((product) => (
-          <div key={product._id} className="flex items-center justify-between py-4">
-            <Item product={product} />
-          </div>
+          <Item product={product} key={product._id} />
         ))}
       </div>
     </section>
