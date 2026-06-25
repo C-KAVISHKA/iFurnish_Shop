@@ -1,0 +1,7 @@
+vs terminal
+docker build -t chatbot:latest .
+
+CMD
+docker tag chatbot:latest chamma08/chatbot:latest
+docker push chamma08/chatbot:latest
+

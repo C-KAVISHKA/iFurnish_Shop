@@ -4,6 +4,8 @@ import Footer from "../components/Footer";
 import { motion } from "framer-motion";
 import { IoSend } from "react-icons/io5";
 import { GrClear } from "react-icons/gr";
+import chatbotIcon from "../assets/chatbot2.png";
+import chatbotSmallIcon from "../assets/chatbot.png";
 
 const fadeDown = (delay) => {
   return {
@@ -76,6 +78,7 @@ const textVariants = {
 const ChatBot = () => {
   const [message, setMessage] = useState("");
   const [chatHistory, setChatHistory] = useState([]);
+  const [isTyping, setIsTyping] = useState(false);
   const chatContainerRef = useRef(null);
 
   const sendMessage = async () => {
@@ -84,13 +87,15 @@ const ChatBot = () => {
     const userMessage = { sender: "user", text: message };
     setChatHistory((prev) => [...prev, userMessage]);
 
+    setIsTyping(true);
     try {
-      const response = await axios.post("http://127.0.0.1:5000/chat", {
+      const response = await axios.post("http://127.0.0.1:5002/chat", {
         message,
       });
       const botText = response.data.response;
 
       setTimeout(() => {
+        setIsTyping(false);
         let currentText = "";
         const botMessage = { sender: "bot", text: currentText };
 
@@ -112,6 +117,7 @@ const ChatBot = () => {
       }, 2200);
     } catch (error) {
       console.error("Error communicating with chatbot:", error);
+      setIsTyping(false);
     }
 
     setMessage("");
@@ -131,23 +137,23 @@ const ChatBot = () => {
   };
 
   return (
-    <div>
-      <div className="bg-primary mb-16 bg-cb bg-cover bg-center bg-no-repeat w-full">
+    <div className="bg-gradient-to-b from-[#faf8f6] via-[#f7f3ed] to-[#f0e9df] min-h-screen">
+      <div className="bg-primary/20 mb-16 bg-cb bg-cover bg-center bg-no-repeat w-full">
         <div className="max-padd-container py-10">
           <h1 className="h1 text-center text-black bold-36">
             <motion.span
               variants={fadeLeft(0.4)}
               initial="hidden"
               whileInView="show"
-              className="font-bold text-blue-900"
+              className="font-bold text-secondary"
             >
-              Furnio
+              iFurnish
             </motion.span>
             <motion.span
               variants={fadeDown(0.8)}
               initial="hidden"
               whileInView="show"
-              className="font-semibold"
+              className="font-semibold text-tertiary"
             >
               {" "}
               Assistant
@@ -166,15 +172,14 @@ const ChatBot = () => {
               </motion.span>
             ))}
           </h5>
-          <div className="bg-[#ffffff] h-[700px] p-5 border-purple-500 border-2 rounded-2xl shadow-md w-full max-w-[394px] mx-auto relative flex flex-col">
+          <div className="glassmorphism h-[700px] p-5 rounded-3xl shadow-2xl w-full max-w-[420px] mx-auto relative flex flex-col border border-white/40">
             <div
               ref={chatContainerRef}
-              className="flex-1 overflow-y-auto p-2"
+              className="flex-1 overflow-y-auto p-2 space-y-4"
               style={{
                 maxHeight: "450px",
                 minHeight: "300px",
-                scrollbarWidth: "thin",
-                scrollbarColor: "#cbd5e0 #edf2f7",
+                scrollbarWidth: "none",
               }}
             >
               {chatHistory.length === 0 && (
@@ -185,7 +190,7 @@ const ChatBot = () => {
                   className="flex justify-center items-center h-full"
                 >
                   <motion.img
-                    src="https://firebasestorage.googleapis.com/v0/b/quickbuy-assign.appspot.com/o/chatbot2.png?alt=media&token=601dceb5-9d7b-4f69-97f0-208cdf0e1754"
+                    src={chatbotIcon}
                     alt="Chatbot"
                     className="w-32 h-32"
                     animate={{
@@ -204,7 +209,7 @@ const ChatBot = () => {
               {chatHistory.map((msg, index) => (
                 <div
                   key={index}
-                  className={`flex items-end my-1 max-w-[80%] ${
+                  className={`flex items-end max-w-[85%] ${
                     msg.sender === "user"
                       ? "ml-auto flex-row-reverse"
                       : "mr-auto"
@@ -212,9 +217,9 @@ const ChatBot = () => {
                 >
                   {msg.sender === "bot" && (
                     <motion.img
-                      src="https://firebasestorage.googleapis.com/v0/b/quickbuy-assign.appspot.com/o/chatbot.png?alt=media&token=4e35c06e-4b3d-40dd-a038-2877b8cccf5d"
+                      src={chatbotSmallIcon}
                       alt="Bot"
-                      className="w-8 h-8 rounded-full mr-2 bg-white border-blue-700 border-2 p-1"
+                      className="w-8 h-8 rounded-full mr-2 bg-white border-secondary border-2 p-1 shadow-sm"
                       animate={{
                         rotate: [0, 10, -10, 0],
                       }}
@@ -227,43 +232,65 @@ const ChatBot = () => {
                   )}
 
                   <div
-                    className={`p-2 rounded-2xl ${
+                    className={`px-4 py-2.5 rounded-2xl shadow-sm text-sm leading-relaxed ${
                       msg.sender === "user"
-                        ? "bg-blue-100 text-blue-900 font-semibold w-96 text-right"
-                        : "bg-gray-300 text-gray-800 font-semibold text-left"
+                        ? "bg-secondary text-white rounded-br-none text-left"
+                        : "bg-white text-gray-800 rounded-bl-none border border-gray-100 text-left"
                     }`}
                   >
                     {msg.text}
                   </div>
                 </div>
               ))}
+              {isTyping && (
+                <div className="flex items-end max-w-[85%] mr-auto">
+                  <motion.img
+                    src={chatbotSmallIcon}
+                    alt="Bot"
+                    className="w-8 h-8 rounded-full mr-2 bg-white border-secondary border-2 p-1 shadow-sm"
+                    animate={{
+                      rotate: [0, 10, -10, 0],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                  />
+                  <div className="px-4 py-3 rounded-2xl rounded-bl-none bg-white border border-gray-100 flex gap-1 items-center shadow-sm">
+                    <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                    <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                    <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                  </div>
+                </div>
+              )}
             </div>
-            <div className=" bottom-0 left-0 right-0 p-4 bg-white border-t">
+            <div className="bottom-0 left-0 right-0 p-4 border-t border-white/20 bg-white/40 rounded-b-3xl">
               <input
                 type="text"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                placeholder="Ask from Furnio"
-                className="w-full p-2 border rounded-md"
+                placeholder="Ask iFurnish..."
+                className="w-full px-4 py-2.5 border border-gray-200/80 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition bg-white/80"
               />
               <div className="flex gap-2 mt-2">
                 <button
                   onClick={sendMessage}
-                  className="flex-1 p-2 bg-blue-500 flexCenter hover:bg-blue-900 text-white rounded-3xl"
+                  className="flex-1 py-2.5 bg-gradient-to-r from-secondary to-indigo-500 hover:from-secondary/90 hover:to-indigo-600 text-white rounded-xl font-medium shadow-md transition hover:-translate-y-0.5 flexCenter"
                 >
                   Send <IoSend className="ml-2"/>
                 </button>
                 <button
                   onClick={clearChat}
                   disabled={chatHistory.length === 0}
-                  className={`flex-1 p-2 ${
-                    chatHistory.length === 0 ? "bg-slate-200 cursor-not-allowed" : "bg-red-500 hover:bg-red-700"
-                  } text-white rounded-3xl flexCenter`}
+                  className={`flex-1 py-2.5 rounded-xl flexCenter text-white transition hover:-translate-y-0.5 shadow-md ${
+                    chatHistory.length === 0 ? "bg-gray-200 text-gray-400 cursor-not-allowed" : "bg-red-500 hover:bg-red-600"
+                  }`}
                 >
                   Clear <GrClear className="ml-2"/>
                 </button>
               </div>
-              <div className="flex flex-wrap gap-2 mt-4">
+              <div className="flex flex-wrap gap-1.5 mt-3">
                 {[
                   "Rules for cash on delivery?",
                   "How long does delivery take?",
@@ -273,7 +300,7 @@ const ChatBot = () => {
                   <button
                     key={index}
                     onClick={() => setMessage(suggestion)}
-                    className="px-3 py-2 text-sm bg-gray-200 rounded-lg hover:bg-gray-300 transition"
+                    className="px-3 py-1.5 text-xs bg-white/80 border border-gray-100 rounded-full hover:bg-secondary hover:text-white transition shadow-sm font-medium text-gray-600"
                   >
                     {suggestion}
                   </button>

@@ -1,0 +1,117 @@
+{
+  "intents": [
+    {
+      "tag": "greeting",
+      "patterns": [
+        "Hi",
+        "Hey",
+        "How are you",
+        "Is anyone there?",
+        "Hello",
+        "Good day",
+        "Is anyone here?"
+      ],
+      "responses": [
+        "Hey I'm furnior, your virtual assistant",
+        "Hello, furnior here",
+        "Hi there, I'm furnior, Your vitual Assistant. what can I do for you?",
+        "Hi there,Thankyou for contacting Furnior AI Assistant! how can I help?"
+      ]
+    },
+    {
+      "tag": "goodbye",
+      "patterns": ["Bye", "See you later", "Goodbye"],
+      "responses": [
+        "See you later, thanks for visiting",
+        "Have a nice day",
+        "Bye! Come back again soon.",
+        "Happy to help!"
+      ]
+    },
+    {
+      "tag": "thanks",
+      "patterns": ["Thanks", "Thank you", "That's helpful", "Thank's a lot!"],
+      "responses": [
+        "Happy to help!",
+        "Any time!",
+        "My pleasure",
+        "You're welcome! Is there anything else I can help you with?"
+      ]
+    },
+    {
+      "tag": "items",
+      "patterns": [
+        "Which items do you have?",
+        "What kinds of items are there?",
+        "What do you sell?"
+      ],
+      "responses": [
+        "We sell Furniture Items",
+        "We have Furnitures and Home Decor Items"
+      ]
+    },
+    {
+      "tag": "payments",
+      "patterns": [
+        "Do you take credit cards?",
+        "Do you accept Mastercard?"
+      ],
+      "responses": [
+        "We accept VISA, Mastercardl",
+        "We accept most major credit cards, and also cash on delivery for some rules and regulatoins"
+      ]
+    },
+    {
+      "tag": "payments - cod",
+      "patterns": [
+        "What are the rules for cod?",
+        "Rules for cash on delivery",
+        "Can I pay with cash on delivery?"
+      ],
+      "responses": [
+        "You have to pay half of the amount in advance and the rest on delivery"
+      ]
+    },
+    {
+      "tag": "delivery",
+      "patterns": [
+        "How long does delivery take?",
+        "How long does shipping take?",
+        "When do I get my delivery?"
+      ],
+      "responses": ["Delivery takes 2-4 days", "Shipping takes 2-4 days"]
+    },
+    {
+      "tag": "funny",
+      "patterns": [
+        "Tell me a joke!",
+        "Tell me something funny!",
+        "Do you know a joke?"
+      ],
+      "responses": [
+        "Why did the hipster burn his mouth? He drank the coffee before it was cool.",
+        "What did the buffalo say when his son left for college? Bison."
+      ]
+    },
+    {
+      "tag": "features",
+      "patterns": [
+        "Can I view furniture in my home?",
+        "Can I customize furniture?"
+      ],
+      "responses": [
+        "Yes, you can view furniture in your home using our AR feature and you can customize furniture as per your needs"
+      ]
+    },
+    {
+      "tag": "contact",
+      "patterns": [
+        "How can I contact customer support?",
+        "Is there a phone number for support?"
+      ],
+      "responses": [
+        "You can contact our support team via email at [support@ifurnishshop.gmail.com] or call us at +94 7762572982."
+      ]
+    }
+  ]
+}
