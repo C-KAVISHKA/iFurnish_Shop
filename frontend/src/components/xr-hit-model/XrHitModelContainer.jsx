@@ -20,6 +20,7 @@ const XrHitModelContainer = () => {
   const productPrice = parseFloat(queryParams.get("price")) || 100;
   const [price, setPrice] = useState(productPrice);
   const [isInARMode, setIsInARMode] = useState(false);
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
   // Define available colors for AR mode
   const availableColors = [
@@ -235,30 +236,54 @@ const XrHitModelContainer = () => {
 
                 {/* AR Button - Prominent placement */}
                 <div className="mt-3 sm:mt-6 flex justify-center">
-                  <ARButton
-                    sessionInit={{
-                      requiredFeatures: ["hit-test"],
-                      optionalFeatures: ["dom-overlay"],
-                      domOverlay: { root: document.body },
-                    }}
-                    className="flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-2 sm:py-3 px-4 sm:px-8 rounded-full text-base sm:text-lg font-medium shadow-md sm:shadow-lg hover:shadow-xl transform transition hover:-translate-y-1 focus:ring-4 focus:ring-purple-500/50"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 sm:h-6 sm:w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
+                  {isIOS ? (
+                    <a
+                      rel="ar"
+                      href={modelPath ? modelPath + ".usdz" : ""}
+                      className="flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-2 sm:py-3 px-4 sm:px-8 rounded-full text-base sm:text-lg font-medium shadow-md sm:shadow-lg hover:shadow-xl transform transition hover:-translate-y-1 focus:ring-4 focus:ring-purple-500/50"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                      />
-                    </svg>
-                    View in Your Space
-                  </ARButton>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5 sm:h-6 sm:w-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                        />
+                      </svg>
+                      View in Your Space
+                    </a>
+                  ) : (
+                    <ARButton
+                      sessionInit={{
+                        requiredFeatures: ["hit-test"],
+                        optionalFeatures: ["dom-overlay"],
+                        domOverlay: { root: document.body },
+                      }}
+                      className="flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-2 sm:py-3 px-4 sm:px-8 rounded-full text-base sm:text-lg font-medium shadow-md sm:shadow-lg hover:shadow-xl transform transition hover:-translate-y-1 focus:ring-4 focus:ring-purple-500/50"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5 sm:h-6 sm:w-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                        />
+                      </svg>
+                      View in Your Space
+                    </ARButton>
+                  )}
                 </div>
               </div>
 
@@ -313,12 +338,12 @@ const XrHitModelContainer = () => {
                   </div>
 
                   {/* Price Display */}
-                  <div className="bg-blue-50 rounded-lg p-3 sm:p-4 mb-4 sm:mb-6 border border-blue-100">
+                  <div className="bg-secondary/5 rounded-lg p-3 sm:p-4 mb-4 sm:mb-6 border border-secondary/15">
                     <div className="flex justify-between items-center">
                       <span className="text-gray-700 font-medium">
                         Current Price:
                       </span>
-                      <span className="text-xl sm:text-2xl font-bold text-blue-700">
+                      <span className="text-xl sm:text-2xl font-bold text-secondary">
                         ${price.toFixed(2)}
                       </span>
                     </div>
@@ -346,7 +371,7 @@ const XrHitModelContainer = () => {
                     </button>
                     <button
                       onClick={handleSave}
-                      className="flex-1 flex items-center justify-center bg-blue-600 text-white px-3 sm:px-4 py-2 sm:py-3 rounded-lg hover:bg-blue-700 transition-colors shadow-md text-sm sm:text-base"
+                      className="flex-1 flex items-center justify-center bg-secondary text-white px-3 sm:px-4 py-2 sm:py-3 rounded-lg hover:bg-secondary/90 transition-colors shadow-md text-sm sm:text-base"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

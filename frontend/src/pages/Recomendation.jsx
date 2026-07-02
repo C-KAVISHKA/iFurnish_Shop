@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 import Footer from "../components/Footer";
 import { FaFileUpload, FaRegCheckCircle, FaSearch } from "react-icons/fa";
 import { FaCircleNotch } from "react-icons/fa6";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import { ShopContext } from "../context/ShopContext";
 
 const Recommendations = () => {
+  const { products } = useContext(ShopContext);
   const [selectedImage, setSelectedImage] = useState(null);
   const [recommendations, setRecommendations] = useState([]);
   const [uploadedImageURL, setUploadedImageURL] = useState("");
@@ -14,14 +17,42 @@ const Recommendations = () => {
   // Set the maximum number of products to display
   const maxProductsToShow = 3;
 
-  const generateDummyProducts = (images) => {
-    return images.map((img, index) => ({
-      _id: index,
-      name: `Furniture ${index + 1}`,
-      description: `This is a description for product ${index + 1}`,
-      price: (Math.random() * 100 + 50).toFixed(2),
-      image: [img],
-    }));
+  const getProductByImageName = (imagePath, productsList) => {
+    if (!imagePath || !productsList) return null;
+    const cleanName = imagePath.replace(/\\/g, '/').split('/').pop().toLowerCase();
+    
+    if (cleanName.includes("chair1")) return productsList.find(p => p._id === "1");
+    if (cleanName.includes("chair2")) return productsList.find(p => p._id === "2");
+    if (cleanName.includes("chair3")) return productsList.find(p => p._id === "3");
+    if (cleanName.includes("chair4")) return productsList.find(p => p._id === "4");
+    if (cleanName.includes("chair5")) return productsList.find(p => p._id === "5");
+    if (cleanName.includes("chair6")) return productsList.find(p => p._id === "8");
+    
+    const match = cleanName.match(/image_(\d+)/);
+    if (match) {
+      const id = match[1];
+      return productsList.find(p => p._id === id);
+    }
+    return null;
+  };
+
+  const mapRecommendationsToProducts = (imagePaths) => {
+    return imagePaths.map((imagePath, index) => {
+      const matchedProduct = getProductByImageName(imagePath, products);
+      if (matchedProduct) {
+        return matchedProduct;
+      }
+      
+      const cleanImgPath = "/" + imagePath.replace(/\\/g, '/');
+      return {
+        _id: `dummy_${index}`,
+        name: `Furniture ${index + 1}`,
+        description: `Experience the comfort and modern styling of this premium design item.`,
+        price: Math.round(150 + index * 35),
+        image: [cleanImgPath],
+        isDummy: true
+      };
+    });
   };
 
   const handleImageChange = (event) => {
@@ -53,8 +84,8 @@ const Recommendations = () => {
       const aiOutput = response.data.recommendations;
       // Limit the number of images to maxProductsToShow
       const limitedImages = aiOutput.slice(0, maxProductsToShow);
-      const dummyProducts = generateDummyProducts(limitedImages);
-      setRecommendations(dummyProducts);
+      const mappedProducts = mapRecommendationsToProducts(limitedImages);
+      setRecommendations(mappedProducts);
     } catch (error) {
       console.error("Error fetching recommendations:", error);
       alert("Something went wrong. Please try again.");
@@ -76,9 +107,10 @@ const Recommendations = () => {
   };
 
   return (
-    <div className="min-h-screen bg-blue-50">
-      <div className="bg-primary mb-8 bg-rc bg-cover bg-center bg-no-repeat w-full py-12">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-tr from-[#faf8f6] via-[#f7f3ed] to-[#f0e9df]">
+      <div className="relative overflow-hidden mb-8 w-full py-16 bg-gradient-to-r from-secondary/80 to-indigo-500/80">
+        <div className="absolute inset-0 bg-rc bg-cover bg-center mix-blend-overlay opacity-30"></div>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* Hero Section with Animated Title */}
           <motion.div 
             initial={{ opacity: 0 }}
@@ -119,7 +151,7 @@ const Recommendations = () => {
             initial="hidden"
             animate="visible"
             transition={{ delay: 0.4, duration: 0.6 }}
-            className="bg-white p-8 rounded-2xl shadow-lg max-w-3xl mx-auto mb-10"
+            className="glassmorphism p-8 rounded-3xl shadow-2xl max-w-3xl mx-auto mb-10 border border-white/40"
           >
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
               <div className="relative inline-block w-full sm:w-auto">
@@ -131,11 +163,11 @@ const Recommendations = () => {
                   aria-label="Upload an image"
                 />
                 <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  whileHover={{ scale: 1.02, y: -1 }}
+                  whileTap={{ scale: 0.98 }}
                   className={`flex items-center justify-center gap-2 px-6 py-3 ${
-                    selectedImage ? "bg-green-500" : "bg-blue-500"
-                  } text-white rounded-xl cursor-pointer font-medium shadow-md w-full sm:w-auto`}
+                    selectedImage ? "bg-gradient-to-r from-emerald-400 to-emerald-500 hover:from-emerald-500 hover:to-emerald-600" : "bg-gradient-to-r from-secondary to-secondary/80 hover:from-secondary/90 hover:to-secondary"
+                  } text-white rounded-xl cursor-pointer font-medium shadow-md w-full sm:w-auto transition duration-300`}
                 >
                   {selectedImage ? (
                     <>
@@ -152,29 +184,29 @@ const Recommendations = () => {
               </div>
               
               <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={selectedImage ? { scale: 1.02, y: -1 } : {}}
+                whileTap={selectedImage ? { scale: 0.98 } : {}}
                 onClick={fetchRecommendations}
                 disabled={!selectedImage}
                 className={`${
                   selectedImage
-                    ? "bg-blue-600 hover:bg-blue-700"
-                    : "bg-gray-300 cursor-not-allowed"
-                } flex items-center justify-center gap-2 rounded-xl text-white px-6 py-3 font-medium shadow-md w-full sm:w-auto`}
+                    ? "bg-gradient-to-r from-secondary to-indigo-500 hover:from-secondary/90 hover:to-indigo-600 shadow-md"
+                    : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                } flex items-center justify-center gap-2 rounded-xl px-6 py-3 font-medium w-full sm:w-auto transition duration-300`}
               >
                 Find Similar <FaSearch />
               </motion.button>
               
               <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={selectedImage ? { scale: 1.02, y: -1 } : {}}
+                whileTap={selectedImage ? { scale: 0.98 } : {}}
                 onClick={handleReset}
                 disabled={!selectedImage}
                 className={`${
                   selectedImage
-                    ? "bg-gray-700 hover:bg-gray-800"
-                    : "bg-gray-300 cursor-not-allowed"
-                } flex items-center justify-center gap-2 rounded-xl text-white px-6 py-3 font-medium shadow-md w-full sm:w-auto`}
+                    ? "bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 shadow-md"
+                    : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                } flex items-center justify-center gap-2 rounded-xl px-6 py-3 font-medium w-full sm:w-auto transition duration-300`}
               >
                 Reset <FaCircleNotch />
               </motion.button>
@@ -188,15 +220,15 @@ const Recommendations = () => {
                 transition={{ duration: 0.5 }}
                 className="flex flex-col items-center"
               >
-                <h2 className="text-xl font-medium mb-4 text-gray-800">Your Uploaded Image</h2>
-                <div className="border-2 border-blue-100 p-2 rounded-xl shadow-md">
+                <h2 className="text-xl font-semibold mb-4 text-gray-800">Your Uploaded Image</h2>
+                <div className="border-2 border-secondary/30 p-2.5 rounded-2xl shadow-lg bg-white">
                   <img
                     src={uploadedImageURL}
                     alt="Uploaded furniture"
-                    className="h-48 w-48 object-cover rounded-lg"
+                    className="h-48 w-48 object-cover rounded-xl"
                   />
                 </div>
-                <p className="text-sm text-gray-500 mt-2">We'll find products similar to this image</p>
+                <p className="text-sm text-gray-500 mt-3 font-medium">We'll find products similar to this image</p>
               </motion.div>
             )}
           </motion.div>
@@ -209,9 +241,9 @@ const Recommendations = () => {
               className="flex flex-col items-center justify-center py-12"
             >
               <div className="relative">
-                <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-500 rounded-full animate-spin"></div>
+                <div className="w-16 h-16 border-4 border-gray-200 border-t-secondary rounded-full animate-spin"></div>
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-8 h-8 border-4 border-transparent border-t-teal-400 rounded-full animate-spin"></div>
+                  <div className="w-8 h-8 border-4 border-transparent border-t-indigo-500 rounded-full animate-spin"></div>
                 </div>
               </div>
               <p className="mt-4 text-gray-600 font-medium">Finding similar products...</p>
@@ -226,11 +258,11 @@ const Recommendations = () => {
               transition={{ duration: 0.8 }}
               className="mt-12"
             >
-              <h2 className="text-3xl font-bold mb-8 text-center">
-                <span className="text-green-600">Recommended</span> Products
+              <h2 className="text-3xl font-bold mb-8 text-center text-gray-800">
+                <span className="text-secondary">Recommended</span> Products
               </h2>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-3xl mx-auto">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto px-4">
                 {recommendations.map((product, index) => (
                   <motion.div
                     key={product._id}
@@ -238,25 +270,30 @@ const Recommendations = () => {
                     initial="hidden"
                     animate="visible"
                     transition={{ delay: index * 0.1 }}
-                    whileHover={{ y: -5, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)" }}
-                    className="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100"
+                    whileHover={{ y: -6, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.08)" }}
+                    className="bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-md transition-shadow duration-300"
                   >
-                    <div className="relative h-56 overflow-hidden">
+                    <div className="relative h-60 overflow-hidden">
                       <img
                         src={product.image[0]}
                         alt={product.name}
-                        className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                        className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                       />
-                      <div className="absolute top-3 right-3 bg-blue-500 text-white rounded-full px-3 py-1 text-sm font-bold shadow-md">
+                      <div className="absolute top-3 right-3 bg-secondary text-white rounded-full px-3.5 py-1 text-sm font-bold shadow-md">
                         ${product.price}
                       </div>
                     </div>
-                    <div className="p-5">
-                      <h3 className="text-xl font-bold text-gray-800 mb-2">{product.name}</h3>
-                      <p className="text-gray-600 mb-4">{product.description}</p>
-                      <button className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg font-medium transition-all duration-300 shadow-md">
-                        View Details
-                      </button>
+                    <div className="p-6">
+                      <h3 className="text-lg font-bold text-gray-800 mb-2 truncate">{product.name}</h3>
+                      <p className="text-gray-500 text-sm mb-5 h-12 overflow-hidden text-ellipsis line-clamp-2">{product.description}</p>
+                      <Link 
+                        to={product.isDummy ? "/collection" : `/product/${product._id}`} 
+                        className="block w-full"
+                      >
+                        <button className="w-full bg-gradient-to-r from-secondary to-indigo-500 hover:from-secondary/90 hover:to-indigo-600 text-white py-2.5 rounded-xl font-medium transition-all duration-300 shadow-sm">
+                          View Details
+                        </button>
+                      </Link>
                     </div>
                   </motion.div>
                 ))}
@@ -272,8 +309,8 @@ const Recommendations = () => {
               animate="visible"
               className="text-center py-8"
             >
-              <div className="bg-blue-50 rounded-xl p-8 max-w-md mx-auto">
-                <FaFileUpload className="text-blue-500 text-5xl mx-auto mb-4" />
+              <div className="bg-secondary/5 border border-secondary/15 rounded-3xl p-8 max-w-md mx-auto shadow-inner">
+                <FaFileUpload className="text-secondary text-5xl mx-auto mb-4 animate-pulse" />
                 <h3 className="text-lg font-medium text-gray-800 mb-2">Upload an image to get started</h3>
                 <p className="text-gray-600">We'll use AI to find similar furniture products that match your style.</p>
               </div>
