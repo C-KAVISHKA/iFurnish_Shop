@@ -8,6 +8,7 @@ import ProductDescription from "../components/ProductDescription";
 import ProductFeatures from "../components/ProductFeatures";
 import RelatedProducts from "../components/RelatedProducts";
 import Footer from "../components/Footer";
+import { getModelForProduct } from "../utils/modelMapper";
 
 const Product = () => {
   const { productId } = useParams();
@@ -110,11 +111,11 @@ const Product = () => {
                 <FaHeart />
               </button>
               <Link
-                to={`/arview?model=${product.model?.[0] || ""}&price=${
+                to={`/arview?model=${getModelForProduct(product)}&price=${
                   product.price
                 }`}
               >
-                <button className="btn-light !rounded-lg !py-3.5 gap-x-2">
+                <button className="btn-light !rounded-lg !py-3.5 gap-x-2" aria-label="View in AR">
                   <FaCamera />
                 </button>
               </Link>

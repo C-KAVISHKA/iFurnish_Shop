@@ -14,7 +14,7 @@ export default function Model({
   isGhost = false
 }) {
   const group = useRef();
-  const gltf = useLoader(GLTFLoader, modelPath || "/models/default.glb");
+  const gltf = useLoader(GLTFLoader, modelPath || "/models/chair1.glb");
   const [modelSize, setModelSize] = useState({ width: 1, height: 1, depth: 1 });
   const [isModelCentered, setIsModelCentered] = useState(false);
 
@@ -89,4 +89,4 @@ export default function Model({
   );
 }
 
-useGLTF.preload("/models/default.glb");
+useGLTF.preload("/models/chair1.glb");

@@ -8,6 +8,7 @@ import ProductDescription from "../components/ProductDescription";
 import ProductFeatures from "../components/ProductFeatures";
 import RelatedProducts from "../components/RelatedProducts";
 import Footer from "../components/Footer";
+import { getModelForProduct } from "../utils/modelMapper";
 
 const SingleProduct = () => {
   const { productId } = useParams();
@@ -93,11 +94,11 @@ const SingleProduct = () => {
               <button className="bg-gray-100 p-3 rounded-lg hover:bg-gray-200">
                 <FaHeart />
               </button>
-              {/* <Link to={`/arview?model=${product.model?.[0] || ""}&price=${product.price}`}>
-                <button className="bg-gray-100 p-3 rounded-lg hover:bg-gray-200">
+              <Link to={`/arview?model=${getModelForProduct(product)}&price=${product.price}`}>
+                <button className="bg-gray-100 p-3 rounded-lg hover:bg-gray-200" aria-label="View in AR">
                   <FaCamera />
                 </button>
-              </Link> */}
+              </Link>
             </div>
 
             <div className="flex items-center gap-2 mt-3 text-gray-500">
