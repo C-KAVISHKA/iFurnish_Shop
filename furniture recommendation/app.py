@@ -32,7 +32,7 @@ model.trainable = False
 model = tf.keras.models.Sequential([model, GlobalMaxPool2D()])
 
 # Set up the NearestNeighbors algorithm
-neighbors = NearestNeighbors(n_neighbors=6, algorithm='brute', metric='euclidean')
+neighbors = NearestNeighbors(n_neighbors=60, algorithm='brute', metric='euclidean')
 neighbors.fit(Image_features)
 
 @app.route('/recommend', methods=['POST'])
@@ -52,17 +52,19 @@ def recommend():
     input_img_features = extract_features_from_images(file_path, model)
     distances, indices = neighbors.kneighbors([input_img_features])
 
-    # Avoid duplicates in the recommendation list
+    # Avoid visual duplicates by skipping images that have nearly identical distance to the query
     unique_recommended_images = []
-    seen = set()
-    for idx in indices[0]:
-        if filenames[idx] not in seen:
-            seen.add(filenames[idx])
+    seen_distances = set()
+    
+    for idx, dist in zip(indices[0], distances[0]):
+        # Round distance to 4 decimal places to catch exact and near-duplicates
+        dist_rounded = round(dist, 4)
+        if dist_rounded not in seen_distances and filenames[idx] != file_path:
+            seen_distances.add(dist_rounded)
             unique_recommended_images.append(filenames[idx])
-
-    # Remove the query image itself from recommendations if present
-    if file_path in unique_recommended_images:
-        unique_recommended_images.remove(file_path)
+            
+        if len(unique_recommended_images) >= 6:
+            break
 
     return jsonify({'recommendations': unique_recommended_images})
 
