@@ -19,21 +19,14 @@ const Recommendations = () => {
 
   const getProductByImageName = (imagePath, productsList) => {
     if (!imagePath || !productsList) return null;
-    const cleanName = imagePath.replace(/\\/g, '/').split('/').pop().toLowerCase();
+    const filename = imagePath.replace(/\\/g, '/').split('/').pop().toLowerCase();
     
-    if (cleanName.includes("chair1")) return productsList.find(p => p._id === "1");
-    if (cleanName.includes("chair2")) return productsList.find(p => p._id === "2");
-    if (cleanName.includes("chair3")) return productsList.find(p => p._id === "3");
-    if (cleanName.includes("chair4")) return productsList.find(p => p._id === "4");
-    if (cleanName.includes("chair5")) return productsList.find(p => p._id === "5");
-    if (cleanName.includes("chair6")) return productsList.find(p => p._id === "8");
-    
-    const match = cleanName.match(/image_(\d+)/);
-    if (match) {
-      const id = match[1];
-      return productsList.find(p => p._id === id);
-    }
-    return null;
+    return productsList.find(p => 
+      p.image && p.image.some(img => {
+        const imgFilename = img.replace(/\\/g, '/').split('/').pop().toLowerCase();
+        return imgFilename === filename;
+      })
+    );
   };
 
   const mapRecommendationsToProducts = (imagePaths) => {
