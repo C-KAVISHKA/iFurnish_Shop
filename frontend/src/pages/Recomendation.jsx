@@ -48,7 +48,7 @@ const Recommendations = () => {
         name: `Furniture ${index + 1}`,
         description: `Experience the comfort and modern styling of this premium design item.`,
         price: Math.round(150 + index * 35),
-        image: [`http://${window.location.hostname}:5001/${cleanImgPath}`],
+        image: [`http://${window.location.hostname}:5001/${encodeURI(cleanImgPath)}`],
         isDummy: true
       };
     });
