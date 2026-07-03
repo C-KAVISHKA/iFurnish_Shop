@@ -1,50 +1,50 @@
 /**
- * Maps a product object from MongoDB to its corresponding 3D GLB model path
- * located in the public/models/ directory.
+ * Maps a product object from MongoDB to its corresponding 3D GLB model path.
+ * Aligns the 3D visualizer model with the product image shown on the card.
  */
 export const getModelForProduct = (product) => {
   if (!product) return "/models/chair1.glb";
   
-  // If the product object has a model array (e.g. from local mock data)
-  if (product.model && product.model[0]) {
-    const filename = product.model[0].split('/').pop();
-    return `/models/${filename}`;
+  const name = (product.name || "").toLowerCase();
+  const category = (product.category || "").toLowerCase();
+  const firstImage = product.image && product.image[0] ? product.image[0].toLowerCase() : "";
+  const filename = firstImage.split('/').pop();
+  
+  // 1. If it's a sofa (category is Sofas, or name has sofa/couch/lounger/pouf/ottoman), return the sofa model
+  if (
+    name.includes("sofa") || 
+    name.includes("couch") || 
+    name.includes("lounger") || 
+    name.includes("pouf") || 
+    name.includes("ottoman") || 
+    category === "sofas" ||
+    filename.includes("sofa") ||
+    filename.includes("s2.png") ||
+    filename.includes("s6.png")
+  ) {
+    return "/models/sofa.glb";
   }
   
-  const name = (product.name || "").toLowerCase();
-  const firstImage = product.image && product.image[0] ? product.image[0].toLowerCase() : "";
+  // 2. If it's a specific chair image, load its corresponding custom 3D chair model
+  if (filename.includes("chair1") || name.includes("bellino")) return "/models/chair1.glb";
+  if (filename.includes("chair2") || name.includes("wendy")) return "/models/chair2.glb";
+  if (filename.includes("chair3") || name.includes("counter stool")) return "/models/chair3.glb";
+  if (filename.includes("chair4") || name.includes("euclid")) return "/models/chair4.glb";
+  if (filename.includes("chair5") || name.includes("executive")) return "/models/chair5.glb";
+  if (filename.includes("chair6")) return "/models/chair6.glb";
   
-  // Match standard chairs based on image filename or product name
-  if (firstImage.includes("chair1") || name.includes("bellino")) return "/models/chair1.glb";
-  if (firstImage.includes("chair2") || name.includes("wendy")) return "/models/chair2.glb";
-  if (firstImage.includes("chair3") || name.includes("counter stool")) return "/models/chair3.glb";
-  if (firstImage.includes("chair4") || name.includes("euclid")) return "/models/chair4.glb";
-  if (firstImage.includes("chair5") || name.includes("executive")) return "/models/chair5.glb";
-  if (firstImage.includes("chair6")) return "/models/chair6.glb";
-  
-  // Match sofas
-  if (name.includes("sofa") || name.includes("couch") || firstImage.includes("sofa")) return "/models/sofa.glb";
-  
-  // Match armchairs
-  if (name.includes("armchair") || firstImage.includes("armchair")) return "/models/armchair.glb";
-  
-  // Match generic chairs/stools/benches
+  // 3. Match generic chair types
+  if (name.includes("armchair")) return "/models/armchair.glb";
+  if (name.includes("modern")) return "/models/modernarmchair.glb";
   if (name.includes("chair") || name.includes("stool") || name.includes("bench")) return "/models/chair.glb";
   
-  // If the image filename matches image_(\d+).jpeg, map it to one of the numbered GLB models (1.glb - 5.glb)
-  const imgMatch = firstImage.match(/image_(\d+)/);
-  if (imgMatch) {
-    const num = parseInt(imgMatch[1], 10);
-    const modelNum = (num % 5) + 1;
-    return `/models/${modelNum}.glb`;
-  }
-  
+  // 4. Default fallback: cycle through numbered models (excluding sofa models) to add variety
   const itemId = parseInt(product.itemId, 10);
   if (!isNaN(itemId)) {
+    // We have 1.glb, 2.glb, 3.glb, 4.glb, 5.glb
     const modelNum = (itemId % 5) + 1;
     return `/models/${modelNum}.glb`;
   }
 
-  // Default fallback
   return "/models/chair1.glb";
 };
