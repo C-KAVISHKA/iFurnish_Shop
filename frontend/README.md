@@ -9,5 +9,5 @@ Currently, two official plugins are available:
 
 
 CMD
-docker tag frontend:latest chamma08/frontend:latest
-docker push chamma08/frontend:latest
+docker tag frontend:latest c-kavishka/frontend:latest
+docker push c-kavishka/frontend:latest

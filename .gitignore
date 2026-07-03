@@ -1,0 +1,24 @@
+node_modules/
+**/node_modules/
+venv/
+**/venv/
+.venv/
+**/.venv/
+__pycache__/
+**/__pycache__/
+*.pkl
+*.pyc
+.env
+**/.env
+uploads/
+**/uploads/
+*.mp4
+*.mkv
+/furniture recommendation/almirah_dataset/
+/furniture recommendation/fridge dataset/
+/furniture recommendation/table dataset/
+/furniture recommendation/tv dataset/
+/furniture recommendation/images/
+.vite/
+**/.vite/
+

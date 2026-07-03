@@ -22,7 +22,7 @@ import About from "./pages/About";
 
 const App = () => {
   return (
-    <main className="overflow-hidden text-[#404040]">
+    <main className="overflow-hidden text-[#404040] bg-[#faf8f6] min-h-screen">
       <ToastContainer />
       <Header />
       <Routes>

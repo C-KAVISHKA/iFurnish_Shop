@@ -3,6 +3,8 @@ import ShowSearch from "../components/ShowSearch";
 import Item from "../components/Item";
 import Footer from "../components/Footer";
 import { ShopContext } from "../context/ShopContext";
+import SkeletonCard from "../components/SkeletonCard";
+import { motion } from "framer-motion";
 
 const Collection = () => {
   const { products, search, showSearch } = useContext(ShopContext);
@@ -11,6 +13,7 @@ const Collection = () => {
   const [sortType, setSortType] = useState("relavant");
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
   const itemsPerPage = 10;
 
   const toggleFilter = (value, setState) => {
@@ -58,6 +61,14 @@ const Collection = () => {
     setFilteredProducts(sorted);
     setCurrentPage(1);
   }, [category, subCategory, search, showSearch, sortType, products]);
+
+  useEffect(() => {
+    setIsLoading(true);
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [category, subCategory, search, showSearch, sortType, currentPage]);
 
   const getPaginatedProducts = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
@@ -123,12 +134,23 @@ const Collection = () => {
         </div>
         <div className="bg-primary p-4 rounded-l-xl">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 gap-y-6">
-            {getPaginatedProducts().length > 0 ? (
-              getPaginatedProducts().map((product) => (
-                <Item product={product} />
+            {isLoading ? (
+              Array.from({ length: 8 }).map((_, idx) => (
+                <SkeletonCard key={idx} />
+              ))
+            ) : getPaginatedProducts().length > 0 ? (
+              getPaginatedProducts().map((product, idx) => (
+                <motion.div
+                  key={product._id}
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.05, type: "spring", damping: 18 }}
+                >
+                  <Item product={product} />
+                </motion.div>
               ))
             ) : (
-              <div className="flexCenter h-96 justify-center">
+              <div className="flexCenter h-96 justify-center col-span-full text-gray-500 font-medium">
                 No products found
               </div>
             )}
