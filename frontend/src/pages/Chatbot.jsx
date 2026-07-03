@@ -89,7 +89,7 @@ const ChatBot = () => {
 
     setIsTyping(true);
     try {
-      const response = await axios.post("http://127.0.0.1:5002/chat", {
+      const response = await axios.post("http://localhost:5002/chat", {
         message,
       });
       const botText = response.data.response;
