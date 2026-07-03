@@ -7,7 +7,10 @@ export const ShopContext = createContext();
 
 const ShopContextProvider = (props) => {
   const currency = "$";
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  const rawBackendUrl = import.meta.env.VITE_BACKEND_URL;
+  const backendUrl = (rawBackendUrl.includes("localhost") || rawBackendUrl.includes("127.0.0.1"))
+    ? `http://${window.location.hostname}:5000`
+    : rawBackendUrl;
   const delivery_charges = 15.00;
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);

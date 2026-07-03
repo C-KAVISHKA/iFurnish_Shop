@@ -68,7 +68,7 @@ const Recommendations = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:5001/recommend",
+        `http://${window.location.hostname}:5001/recommend`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
