@@ -19,7 +19,14 @@ const Recommendations = () => {
 
   const getProductByImageName = (imagePath, productsList) => {
     if (!imagePath || !productsList) return null;
-    const filename = imagePath.replace(/\\/g, '/').split('/').pop().toLowerCase();
+    
+    // Only attempt to match with actual store inventory if the AI recommended an image from the 'images' directory
+    // (since our store inventory files are only located in the /images/ folder).
+    // This prevents collisions where 'table dataset/image_1.jpeg' incorrectly matches the store's '/images/image_1.jpeg'.
+    const normalizedPath = imagePath.replace(/\\/g, '/').toLowerCase();
+    if (!normalizedPath.startsWith('images/')) return null;
+
+    const filename = normalizedPath.split('/').pop();
     
     return productsList.find(p => 
       p.image && p.image.some(img => {
@@ -35,14 +42,13 @@ const Recommendations = () => {
       if (matchedProduct) {
         return matchedProduct;
       }
-      
-      const cleanImgPath = "/" + imagePath.replace(/\\/g, '/');
+      const cleanImgPath = imagePath.replace(/\\/g, '/');
       return {
         _id: `dummy_${index}`,
         name: `Furniture ${index + 1}`,
         description: `Experience the comfort and modern styling of this premium design item.`,
         price: Math.round(150 + index * 35),
-        image: [cleanImgPath],
+        image: [`http://${window.location.hostname}:5001/${cleanImgPath}`],
         isDummy: true
       };
     });

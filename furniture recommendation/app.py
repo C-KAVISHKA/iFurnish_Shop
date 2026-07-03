@@ -9,7 +9,7 @@ from sklearn.neighbors import NearestNeighbors
 import os
 from numpy.linalg import norm
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='.', static_url_path='')
 from flask_cors import CORS
 CORS(app)
 
