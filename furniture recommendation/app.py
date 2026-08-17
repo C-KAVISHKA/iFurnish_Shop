@@ -14,8 +14,26 @@ from flask_cors import CORS
 CORS(app)
 
 # Load pre-trained data
-Image_features = pkl.load(open('Image_features.pkl', 'rb'))
-filenames = pkl.load(open('filenames.pkl', 'rb'))
+All_Image_features = pkl.load(open('Image_features.pkl', 'rb'))
+All_filenames = pkl.load(open('filenames.pkl', 'rb'))
+
+# Match against your store's actual catalog (chairs, tables, sofas, desks)
+store_set = set(['chair1.jpg', 'chair2.jpg', 'chair3.jpg', 'chair4.jpg', 'chair5.jpg', 'chair6.jpg'] + [f'image_{i}.jpeg' for i in range(1, 53)])
+
+store_indices = []
+filenames = []
+for idx, fn in enumerate(All_filenames):
+    fn_norm = fn.replace('\\', '/')
+    parts = fn_norm.split('/')
+    if parts[0] == 'images' and parts[-1] in store_set:
+        store_indices.append(idx)
+        filenames.append(fn_norm)
+
+if len(store_indices) > 0:
+    Image_features = np.array([All_Image_features[i] for i in store_indices])
+else:
+    Image_features = np.array(All_Image_features)
+    filenames = [f.replace('\\', '/') for f in All_filenames]
 
 def extract_features_from_images(image_path, model):
     img = image.load_img(image_path, target_size=(224, 224))
@@ -31,8 +49,9 @@ model = ResNet50(weights='imagenet', include_top=False, input_shape=(224, 224, 3
 model.trainable = False
 model = tf.keras.models.Sequential([model, GlobalMaxPool2D()])
 
-# Set up the NearestNeighbors algorithm
-neighbors = NearestNeighbors(n_neighbors=60, algorithm='brute', metric='euclidean')
+# Set up the NearestNeighbors algorithm on store catalog
+n_neighbors = min(len(filenames), 15)
+neighbors = NearestNeighbors(n_neighbors=n_neighbors, algorithm='brute', metric='euclidean')
 neighbors.fit(Image_features)
 
 @app.route('/recommend', methods=['POST'])
