@@ -68,38 +68,28 @@ const ProductContextProvider = (props) => {
       return;
     }
   
-    if (!userId) {
-      toast.error("User not authenticated.");
-      return;
-    }
-  
+    // Always update local cart state first
     let cartData = { ...cartItems };
-  
     if (!cartData[itemId]) {
       cartData[itemId] = {};
     }
-  
     cartData[itemId][sizes] = (cartData[itemId][sizes] || 0) + 1;
     setCartItems(cartData);
+    toast.success("Item added to cart.");
   
-    if (token) {
+    // Only sync to backend if user is logged in
+    if (token && userId) {
       try {
         const response = await axios.post(
           `${backendUrl}/api/cart/add`,
           { userId, itemId, sizes },
           { headers: { Authorization: `Bearer ${token}` } }
         );
-  
-        if (response.data.success) {
-          toast.success("Item added to cart.");
-        } else {
-          toast.error(response.data.message);
-          setCartItems({ ...cartItems }); // Revert changes if API fails
+        if (!response.data.success) {
+          console.error("Cart sync failed:", response.data.message);
         }
       } catch (error) {
-        console.error("Error adding to cart:", error);
-        toast.error("Failed to add item.");
-        setCartItems({ ...cartItems }); // Revert on error
+        console.error("Error syncing cart to backend:", error);
       }
     }
   };
@@ -175,24 +165,24 @@ const ProductContextProvider = (props) => {
   };
 
   const getUserCart = async () => {
-    if (!userId) {
+    if (!userId || !token) {
       return;
     }
 
     try {
-      const response = await axios.get(
-        `${backendUrl}/api/cart/${userId}`,
+      const response = await axios.post(
+        `${backendUrl}/api/cart/get`,
+        { userId },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
       if (response.data.success) {
-        setCartItems(response.data.cart);
+        setCartItems(response.data.cartData || {});
       } else {
-        toast.error(response.data.message);
+        console.error("Get cart failed:", response.data.message);
       }
     } catch (error) {
       console.error("Error fetching cart:", error);
-      toast.error("Failed to fetch cart");
     }
   }
 

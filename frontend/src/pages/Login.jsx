@@ -9,63 +9,56 @@ import { FaArrowLeft } from "react-icons/fa";
 const Login = () => {
   const { navigate, backendUrl } = useContext(ShopContext);
   const { token, setToken } = useContext(ProductContext);
+  // States: "Login" | "Sign Up"
   const [currState, setCurrState] = useState("Login");
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const onSubmitHandler = (e) => {
+  const onSubmitHandler = async (e) => {
     e.preventDefault();
     try {
       if (currState === "Sign Up") {
-        fetch(`${backendUrl}/api/user/register`, {
+        const res = await fetch(`${backendUrl}/api/user/register`, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: name,
-            email: email,
-            password: password,
-          }),
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            if (data.success) {
-              toast.success("Registration Successful");
-              setCurrState("Sign In");
-            } else {
-              toast.error(data.message);
-            }
-          });
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, password }),
+        });
+        const data = await res.json();
+        if (data.success) {
+          toast.success("Registration Successful! Please sign in.");
+          setCurrState("Login");
+          setName("");
+          setEmail("");
+          setPassword("");
+        } else {
+          toast.error(data.message);
+        }
       } else {
-        fetch(`${backendUrl}/api/user/login`, {
+        const res = await fetch(`${backendUrl}/api/user/login`, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: email,
-            password: password,
-          }),
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            if (data.success) {
-              toast.success("Login Successful");
-              setToken(data.token);
-              localStorage.setItem("token", data.token);
-              navigate("/");
-            } else {
-              toast.error(data.message);
-            }
-          });
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
+        const data = await res.json();
+        if (data.success) {
+          toast.success("Login Successful");
+          setToken(data.token);
+          localStorage.setItem("token", data.token);
+          navigate("/");
+        } else {
+          toast.error(data.message);
+        }
       }
     } catch (error) {
       console.error("Error:", error);
-      toast.error("Failed to login");
+      toast.error("Could not connect to server. Please try again.");
     }
+  };
+
+  const handleForgotPassword = () => {
+    toast.info("Please contact support to reset your password.");
   };
 
   useEffect(() => {
@@ -78,12 +71,12 @@ const Login = () => {
     <div className="absolute top-0 left-0 w-full h-full z-50 bg-white">
       <button
         onClick={() => navigate("/")}
-        className="absolute top-5 left-5 flex items-center gap-2 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-full shadow-md transition-all duration-300"
+        className="absolute top-5 left-5 flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg border border-gray-300 shadow-sm transition-all duration-300 z-10"
       >
-        <FaArrowLeft className="text-lg" />
+        <FaArrowLeft className="text-sm" />
         <span className="text-sm font-medium">
-          Back to <span className="font-bold">Furni</span>
-          <span className="text-secondary font-bold">Online</span>
+          Back to <span className="font-bold text-gray-900">iFurnish</span>
+          <span className="font-bold text-yellow-600">Shop</span>
         </span>
       </button>
       <div className="flex h-full w-full">
@@ -99,6 +92,7 @@ const Login = () => {
               <h3 className="bold-36">{currState}</h3>
             </div>
             {currState === "Sign Up" && (
+
               <div className="w-full">
                 <label htmlFor="name" className="medium-15">
                   Name
@@ -149,10 +143,15 @@ const Login = () => {
               {currState === "Sign Up" ? "Sign Up" : "Sign In"}
             </button>
             <div className="flex w-full flex-col gap-y-3">
-              <div className="medium-15">Forget Password</div>
-              {currState === "Sign In" ? (
+              <div
+                onClick={handleForgotPassword}
+                className="medium-15 cursor-pointer hover:text-yellow-600 transition-colors"
+              >
+                Forgot Password?
+              </div>
+              {currState === "Login" ? (
                 <div>
-                  Don't have an account?{" "}
+                  Don&apos;t have an account?{" "}
                   <span
                     onClick={() => setCurrState("Sign Up")}
                     className="cursor-pointer font-semibold text-yellow-600"
@@ -162,9 +161,9 @@ const Login = () => {
                 </div>
               ) : (
                 <div>
-                  Already have an account{" "}
+                  Already have an account?{" "}
                   <span
-                    onClick={() => setCurrState("Sign In")}
+                    onClick={() => setCurrState("Login")}
                     className="cursor-pointer font-semibold text-green-600"
                   >
                     Sign In
