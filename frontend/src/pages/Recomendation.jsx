@@ -48,7 +48,7 @@ const Recommendations = () => {
         name: `Furniture ${index + 1}`,
         description: `Experience the comfort and modern styling of this premium design item.`,
         price: Math.round(150 + index * 35),
-        image: [`http://${window.location.hostname}:5001/${encodeURI(cleanImgPath)}`],
+        image: [`${import.meta.env.VITE_RECOMMENDATION_URL || `http://${window.location.hostname}:5001`}/${encodeURI(cleanImgPath)}`],
         isDummy: true
       };
     });
@@ -74,7 +74,7 @@ const Recommendations = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        `http://${window.location.hostname}:5001/recommend`,
+        `${import.meta.env.VITE_RECOMMENDATION_URL || `http://${window.location.hostname}:5001`}/recommend`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
