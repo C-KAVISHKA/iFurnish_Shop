@@ -52,17 +52,22 @@ def recommend():
     input_img_features = extract_features_from_images(file_path, model)
     distances, indices = neighbors.kneighbors([input_img_features])
 
-    # Avoid visual duplicates by skipping images that have nearly identical distance to the query
+    # Collect the top unique visual recommendations
     unique_recommended_images = []
-    seen_distances = set()
+    seen_files = set()
     
     for idx, dist in zip(indices[0], distances[0]):
-        # Round distance to 4 decimal places to catch exact and near-duplicates
-        dist_rounded = round(dist, 4)
-        if dist_rounded not in seen_distances and filenames[idx] != file_path:
-            seen_distances.add(dist_rounded)
-            unique_recommended_images.append(filenames[idx])
+        fn = filenames[idx].replace('\\', '/')
+        # Skip if exact duplicate path or already included
+        if fn in seen_files:
+            continue
+        # Skip exact query image if identical distance
+        if dist < 0.0001 and len(unique_recommended_images) == 0:
+            continue
             
+        seen_files.add(fn)
+        unique_recommended_images.append(fn)
+        
         if len(unique_recommended_images) >= 6:
             break
 
