@@ -77,7 +77,10 @@ const Recommendations = () => {
         `${import.meta.env.VITE_RECOMMENDATION_URL || `http://${window.location.hostname}:5001`}/recommend`,
         formData,
         {
-          headers: { "Content-Type": "multipart/form-data" },
+          headers: { 
+            "Content-Type": "multipart/form-data",
+            "Bypass-Tunnel-Reminder": "true"
+          },
         }
       );
       const aiOutput = response.data.recommendations;
