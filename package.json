@@ -1,0 +1,7 @@
+{
+  "name": "ifurnish-root",
+  "type": "module",
+  "dependencies": {
+    "@ngrok/ngrok": "^1.7.0"
+  }
+}
