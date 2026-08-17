@@ -89,7 +89,8 @@ const ChatBot = () => {
 
     setIsTyping(true);
     try {
-      const response = await axios.post(`http://${window.location.hostname}:5002/chat`, {
+      const chatbotUrl = import.meta.env.VITE_CHATBOT_URL || `http://${window.location.hostname}:5002`;
+      const response = await axios.post(`${chatbotUrl}/chat`, {
         message,
       });
       const botText = response.data.response;
