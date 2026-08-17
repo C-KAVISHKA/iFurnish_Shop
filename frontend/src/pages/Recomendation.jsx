@@ -36,19 +36,28 @@ const Recommendations = () => {
     );
   };
 
+  const getRecBaseUrl = () => {
+    const envUrl = import.meta.env.VITE_RECOMMENDATION_URL;
+    if (envUrl && envUrl.trim() !== "") {
+      return envUrl.trim().replace(/\/+$/, "");
+    }
+    return `http://${window.location.hostname}:5001`;
+  };
+
   const mapRecommendationsToProducts = (imagePaths) => {
+    const recBase = getRecBaseUrl();
     return imagePaths.map((imagePath, index) => {
       const matchedProduct = getProductByImageName(imagePath, products);
       if (matchedProduct) {
         return matchedProduct;
       }
-      const cleanImgPath = imagePath.replace(/\\/g, '/');
+      const cleanImgPath = imagePath.replace(/\\/g, '/').replace(/^\/+/, '');
       return {
         _id: `dummy_${index}`,
         name: `Furniture ${index + 1}`,
         description: `Experience the comfort and modern styling of this premium design item.`,
         price: Math.round(150 + index * 35),
-        image: [`${import.meta.env.VITE_RECOMMENDATION_URL || `http://${window.location.hostname}:5001`}/${encodeURI(cleanImgPath)}`],
+        image: [`${recBase}/${encodeURI(cleanImgPath)}`],
         isDummy: true
       };
     });
@@ -73,8 +82,9 @@ const Recommendations = () => {
 
     setLoading(true);
     try {
+      const recBase = getRecBaseUrl();
       const response = await axios.post(
-        `${import.meta.env.VITE_RECOMMENDATION_URL || `http://${window.location.hostname}:5001`}/recommend`,
+        `${recBase}/recommend`,
         formData,
         {
           headers: { 
@@ -279,6 +289,10 @@ const Recommendations = () => {
                       <img
                         src={product.image[0]}
                         alt={product.name}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=600&q=80";
+                        }}
                         className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                       />
                       <div className="absolute top-3 right-3 bg-secondary text-white rounded-full px-3.5 py-1 text-sm font-bold shadow-md">
