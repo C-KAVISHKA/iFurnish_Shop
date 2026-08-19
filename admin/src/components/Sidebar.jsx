@@ -10,7 +10,7 @@ const Sidebar = ({setToken}) => {
     <div className="max-sm:flexCenter max-xs:pb-3 rounded bg-white pb-3 sm:w-1/5 sm:min-h-screen">
       <div className="flex flex-col gap-y-6 max-sm:items-center sm:flex-col pt-4 sm:pt-14">
         <Link to={"/"} className="font-bold xl:bold-32 sm:pl-2">
-          Furni<span className="text-secondary">Online</span>
+          iFurnish<span className="text-secondary">Shop</span>
         </Link>
         <div className="flex sm:flex-col gap-x-5 gap-y-8 sm:pt-10">
           <NavLink

@@ -5,17 +5,31 @@
 export const getModelForProduct = (product) => {
   if (!product) return "/models/chair1.glb";
   
-  // 0. Use the precise 3D model path assigned in the database
-  if (product.model && product.model.length > 0 && product.model[0]) {
-    return product.model[0];
-  }
-  
   const name = (product.name || "").toLowerCase();
   const category = (product.category || "").toLowerCase();
   const firstImage = product.image && product.image[0] ? product.image[0].toLowerCase() : "";
   const filename = firstImage.split('/').pop();
   
-  // 1. Specific chairs (exact matches)
+  // 1. Tables & Desks
+  if (
+    category === "tables" || 
+    category === "table" || 
+    category === "desks" || 
+    category === "desk" || 
+    name.includes("table") || 
+    name.includes("desk") ||
+    filename.includes("table") ||
+    filename.includes("desk")
+  ) {
+    return "/models/table.glb";
+  }
+
+  // 2. Use explicit 3D model path assigned in the database (if not table)
+  if (product.model && product.model.length > 0 && product.model[0]) {
+    return product.model[0];
+  }
+  
+  // 3. Specific chairs (exact matches)
   if (filename.includes("chair1") || name.includes("bellino")) return "/models/chair1.glb";
   if (filename.includes("chair2") || name.includes("wendy")) return "/models/chair2.glb";
   if (filename.includes("chair3") || name.includes("counter stool")) return "/models/chair3.glb";
@@ -34,7 +48,7 @@ export const getModelForProduct = (product) => {
     return "/models/sofa.glb";
   }
   
-  // 2. Sofas / Couches
+  // 4. Sofas / Couches
   if (
     name.includes("sofa") || 
     name.includes("couch") || 
