@@ -23,6 +23,7 @@ export const handleChat = async (req, res) => {
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
+      console.warn("[iFurnish Chat] GEMINI_API_KEY is missing in process.env");
       return res.json({
         response: "Hello! Welcome to iFurnish Shop. We offer premium modern sofas, beds, dining tables, and 3D AR room previews. How can I help you today?"
       });
@@ -30,6 +31,7 @@ export const handleChat = async (req, res) => {
 
     const models = ["gemini-3.6-flash", "gemini-3.7-flash", "gemini-flash-latest"];
     let replyText = null;
+    let lastError = null;
 
     for (const model of models) {
       try {
@@ -52,12 +54,17 @@ export const handleChat = async (req, res) => {
         );
 
         const data = await response.json();
+        if (data.error) {
+          console.error(`[iFurnish Chat] Gemini API error on ${model}:`, data.error.message || data.error);
+          lastError = data.error.message;
+        }
         if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
           replyText = data.candidates[0].content.parts[0].text.trim();
           break;
         }
       } catch (err) {
-        console.error(`Gemini call failed with ${model}:`, err.message);
+        console.error(`[iFurnish Chat] Gemini fetch failed on ${model}:`, err.message);
+        lastError = err.message;
       }
     }
 
