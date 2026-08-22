@@ -4,9 +4,12 @@ import json
 import nltk
 nltk.download('punkt', quiet=True)
 import torch
-from dotenv import load_dotenv
 
-load_dotenv()
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
 
 from model import NeuralNet
 from nltk_utils import bag_of_words, tokenize
