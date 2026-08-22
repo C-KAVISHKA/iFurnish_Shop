@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import axios from "axios";
 import Footer from "../components/Footer";
 import { motion, AnimatePresence } from "framer-motion";
@@ -7,6 +7,7 @@ import { FaRobot, FaCube, FaTruck, FaMoneyBillWave, FaPaintBrush } from "react-i
 import chatbotIcon from "../assets/chatbot2.png";
 import chatbotSmallIcon from "../assets/chatbot.png";
 import { Link } from "react-router-dom";
+import { ShopContext } from "../context/ShopContext";
 
 const quickPrompts = [
   { icon: FaCube, label: "3D AR View", query: "How do I view furniture in 3D AR?" },
@@ -16,6 +17,7 @@ const quickPrompts = [
 ];
 
 const ChatBot = () => {
+  const { backendUrl } = useContext(ShopContext) || {};
   const [message, setMessage] = useState("");
   const [chatHistory, setChatHistory] = useState([
     {
@@ -41,15 +43,41 @@ const ChatBot = () => {
 
     try {
       const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-      const chatbotUrl =
-        (import.meta.env.VITE_CHATBOT_URL && import.meta.env.VITE_CHATBOT_URL.trim() !== "")
-          ? import.meta.env.VITE_CHATBOT_URL.trim().replace(/\/+$/, "")
-          : (isLocal ? "http://localhost:5002" : "https://ifurnishshop-production-7648.up.railway.app");
+      const endpointsToTry = [];
 
-      const response = await axios.post(`${chatbotUrl}/chat`, {
-        message: queryText,
-      }, { timeout: 25000 });
-      const botText = response.data.response;
+      if (backendUrl) {
+        endpointsToTry.push(`${backendUrl.replace(/\/+$/, "")}/api/chat`);
+      }
+      if (import.meta.env.VITE_CHATBOT_URL) {
+        endpointsToTry.push(`${import.meta.env.VITE_CHATBOT_URL.trim().replace(/\/+$/, "")}/chat`);
+      }
+      if (isLocal) {
+        endpointsToTry.push("http://localhost:5002/chat");
+        endpointsToTry.push("http://localhost:5000/api/chat");
+      } else {
+        endpointsToTry.push("https://ifurnishshop-production.up.railway.app/api/chat");
+        endpointsToTry.push("https://ifurnishshop-production-7648.up.railway.app/chat");
+      }
+
+      let botText = "";
+      let lastError = null;
+
+      for (const endpoint of endpointsToTry) {
+        try {
+          const response = await axios.post(endpoint, { message: queryText }, { timeout: 25000 });
+          if (response.data && response.data.response) {
+            botText = response.data.response;
+            break;
+          }
+        } catch (err) {
+          lastError = err;
+          console.warn(`Attempt on ${endpoint} failed:`, err.message);
+        }
+      }
+
+      if (!botText) {
+        throw lastError || new Error("Connection failed");
+      }
 
       setTimeout(() => {
         setIsTyping(false);
