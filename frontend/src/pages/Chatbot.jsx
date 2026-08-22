@@ -40,10 +40,15 @@ const ChatBot = () => {
     setIsTyping(true);
 
     try {
-      const chatbotUrl = import.meta.env.VITE_CHATBOT_URL || `http://${window.location.hostname}:5002`;
+      const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+      const chatbotUrl =
+        (import.meta.env.VITE_CHATBOT_URL && import.meta.env.VITE_CHATBOT_URL.trim() !== "")
+          ? import.meta.env.VITE_CHATBOT_URL.trim().replace(/\/+$/, "")
+          : (isLocal ? "http://localhost:5002" : "https://ifurnishshop-production-7648.up.railway.app");
+
       const response = await axios.post(`${chatbotUrl}/chat`, {
         message: queryText,
-      });
+      }, { timeout: 25000 });
       const botText = response.data.response;
 
       setTimeout(() => {

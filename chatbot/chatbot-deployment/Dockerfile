@@ -22,5 +22,5 @@ COPY . .
 # Expose the port your Flask app will run on
 EXPOSE 5000
 
-# Define the command to run your Flask app
-CMD ["python", "app.py"]
+# Define the command to run your Flask app with gunicorn
+CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:${PORT:-5000} --workers 1 --threads 4 --timeout 120 app:app"]
