@@ -120,17 +120,17 @@ const Recommendations = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-tr from-[#faf8f6] via-[#f7f3ed] to-[#f0e9df]">
-      <div className="relative overflow-hidden mb-8 w-full py-16 bg-gradient-to-r from-secondary/80 to-indigo-500/80">
+      <div className="relative overflow-hidden mb-8 w-full py-10 sm:py-16 bg-gradient-to-r from-secondary/80 to-indigo-500/80">
         <div className="absolute inset-0 bg-rc bg-cover bg-center mix-blend-overlay opacity-30"></div>
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 relative z-10">
           {/* Hero Section with Animated Title */}
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
-            className="text-center mb-12"
+            className="text-center mb-8 sm:mb-12"
           >
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-4 tracking-tight">
+            <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-light mb-2 sm:mb-4 tracking-tight">
               <motion.span 
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -151,7 +151,7 @@ const Recommendations = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
-              className="text-gray-600 text-lg max-w-2xl mx-auto"
+              className="text-gray-600 text-xs sm:text-base md:text-lg max-w-2xl mx-auto px-2"
             >
               Upload a photo of furniture you like and we'll find similar products for you instantly.
             </motion.p>
@@ -163,9 +163,9 @@ const Recommendations = () => {
             initial="hidden"
             animate="visible"
             transition={{ delay: 0.4, duration: 0.6 }}
-            className="glassmorphism p-8 rounded-3xl shadow-2xl max-w-3xl mx-auto mb-10 border border-white/40"
+            className="glassmorphism p-4 sm:p-8 rounded-2xl sm:rounded-3xl shadow-2xl max-w-3xl mx-auto mb-8 sm:mb-10 border border-white/40"
           >
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-4 sm:mb-6">
               <div className="relative inline-block w-full sm:w-auto">
                 <input
                   type="file"
@@ -177,51 +177,53 @@ const Recommendations = () => {
                 <motion.div
                   whileHover={{ scale: 1.02, y: -1 }}
                   whileTap={{ scale: 0.98 }}
-                  className={`flex items-center justify-center gap-2 px-6 py-3 ${
+                  className={`flex items-center justify-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 ${
                     selectedImage ? "bg-gradient-to-r from-emerald-400 to-emerald-500 hover:from-emerald-500 hover:to-emerald-600" : "bg-gradient-to-r from-secondary to-secondary/80 hover:from-secondary/90 hover:to-secondary"
-                  } text-white rounded-xl cursor-pointer font-medium shadow-md w-full sm:w-auto transition duration-300`}
+                  } text-white rounded-xl cursor-pointer text-xs sm:text-sm font-medium shadow-md w-full sm:w-auto transition duration-300`}
                 >
                   {selectedImage ? (
                     <>
-                      <FaRegCheckCircle size={20} />
+                      <FaRegCheckCircle size={18} />
                       <span>Uploaded</span>
                     </>
                   ) : (
                     <>
-                      <FaFileUpload size={20} />
+                      <FaFileUpload size={18} />
                       <span>Upload Image</span>
                     </>
                   )}
                 </motion.div>
               </div>
               
-              <motion.button
-                whileHover={selectedImage ? { scale: 1.02, y: -1 } : {}}
-                whileTap={selectedImage ? { scale: 0.98 } : {}}
-                onClick={fetchRecommendations}
-                disabled={!selectedImage}
-                className={`${
-                  selectedImage
-                    ? "bg-gradient-to-r from-secondary to-indigo-500 hover:from-secondary/90 hover:to-indigo-600 shadow-md"
-                    : "bg-gray-200 text-gray-400 cursor-not-allowed"
-                } flex items-center justify-center gap-2 rounded-xl px-6 py-3 font-medium w-full sm:w-auto transition duration-300`}
-              >
-                Find Similar <FaSearch />
-              </motion.button>
-              
-              <motion.button
-                whileHover={selectedImage ? { scale: 1.02, y: -1 } : {}}
-                whileTap={selectedImage ? { scale: 0.98 } : {}}
-                onClick={handleReset}
-                disabled={!selectedImage}
-                className={`${
-                  selectedImage
-                    ? "bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 shadow-md"
-                    : "bg-gray-200 text-gray-400 cursor-not-allowed"
-                } flex items-center justify-center gap-2 rounded-xl px-6 py-3 font-medium w-full sm:w-auto transition duration-300`}
-              >
-                Reset <FaCircleNotch />
-              </motion.button>
+              <div className="flex gap-2 w-full sm:w-auto">
+                <motion.button
+                  whileHover={selectedImage ? { scale: 1.02, y: -1 } : {}}
+                  whileTap={selectedImage ? { scale: 0.98 } : {}}
+                  onClick={fetchRecommendations}
+                  disabled={!selectedImage}
+                  className={`${
+                    selectedImage
+                      ? "bg-gradient-to-r from-secondary to-indigo-500 hover:from-secondary/90 hover:to-indigo-600 shadow-md"
+                      : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                  } flex-1 sm:flex-initial flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 sm:px-6 sm:py-3 text-xs sm:text-sm font-medium transition duration-300`}
+                >
+                  Find Similar <FaSearch size={14} />
+                </motion.button>
+                
+                <motion.button
+                  whileHover={selectedImage ? { scale: 1.02, y: -1 } : {}}
+                  whileTap={selectedImage ? { scale: 0.98 } : {}}
+                  onClick={handleReset}
+                  disabled={!selectedImage}
+                  className={`${
+                    selectedImage
+                      ? "bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 shadow-md"
+                      : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                  } flex-1 sm:flex-initial flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 sm:px-6 sm:py-3 text-xs sm:text-sm font-medium transition duration-300`}
+                >
+                  Reset <FaCircleNotch size={14} />
+                </motion.button>
+              </div>
             </div>
 
             {/* Image Preview Section */}
@@ -232,15 +234,15 @@ const Recommendations = () => {
                 transition={{ duration: 0.5 }}
                 className="flex flex-col items-center"
               >
-                <h2 className="text-xl font-semibold mb-4 text-gray-800">Your Uploaded Image</h2>
-                <div className="border-2 border-secondary/30 p-2.5 rounded-2xl shadow-lg bg-white">
+                <h2 className="text-base sm:text-xl font-semibold mb-3 text-gray-800">Your Uploaded Image</h2>
+                <div className="border-2 border-secondary/30 p-2 rounded-2xl shadow-lg bg-white">
                   <img
                     src={uploadedImageURL}
                     alt="Uploaded furniture"
-                    className="h-48 w-48 object-cover rounded-xl"
+                    className="h-36 w-36 sm:h-48 sm:w-48 object-cover rounded-xl"
                   />
                 </div>
-                <p className="text-sm text-gray-500 mt-3 font-medium">We'll find products similar to this image</p>
+                <p className="text-xs sm:text-sm text-gray-500 mt-2 font-medium">We'll find products similar to this image</p>
               </motion.div>
             )}
           </motion.div>
@@ -250,42 +252,42 @@ const Recommendations = () => {
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="flex flex-col items-center justify-center py-12"
+              className="flex flex-col items-center justify-center py-8 sm:py-12"
             >
               <div className="relative">
-                <div className="w-16 h-16 border-4 border-gray-200 border-t-secondary rounded-full animate-spin"></div>
+                <div className="w-12 h-12 sm:w-16 sm:h-16 border-4 border-gray-200 border-t-secondary rounded-full animate-spin"></div>
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-8 h-8 border-4 border-transparent border-t-indigo-500 rounded-full animate-spin"></div>
+                  <div className="w-6 h-6 sm:w-8 sm:h-8 border-4 border-transparent border-t-indigo-500 rounded-full animate-spin"></div>
                 </div>
               </div>
-              <p className="mt-4 text-gray-600 font-medium">Finding similar products...</p>
+              <p className="mt-4 text-gray-600 font-medium text-xs sm:text-sm">Finding similar products...</p>
             </motion.div>
           )}
 
-          {/* Recommendations Section */}
+          {/* Recommendations Section - 2 Column Mobile Grid */}
           {!loading && recommendations.length > 0 && (
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8 }}
-              className="mt-12"
+              className="mt-8 sm:mt-12"
             >
-              <h2 className="text-3xl font-bold mb-8 text-center text-gray-800">
+              <h2 className="text-xl sm:text-3xl font-bold mb-6 text-center text-gray-800">
                 <span className="text-secondary">Recommended</span> Products
               </h2>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto px-4">
+              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 max-w-5xl mx-auto">
                 {recommendations.map((product, index) => (
                   <motion.div
                     key={product._id}
                     variants={fadeInUp}
                     initial="hidden"
                     animate="visible"
-                    transition={{ delay: index * 0.1 }}
+                    transition={{ delay: index * 0.05 }}
                     whileHover={{ y: -6, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.08)" }}
-                    className="bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-md transition-shadow duration-300"
+                    className="bg-white rounded-2xl sm:rounded-3xl overflow-hidden border border-gray-100 shadow-md transition-shadow duration-300 flex flex-col justify-between"
                   >
-                    <div className="relative h-60 overflow-hidden">
+                    <div className="relative h-36 xs:h-44 sm:h-60 overflow-hidden bg-gray-50 flexCenter p-2">
                       <img
                         src={product.image[0]}
                         alt={product.name}
@@ -293,20 +295,20 @@ const Recommendations = () => {
                           e.target.onerror = null;
                           e.target.src = "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=600&q=80";
                         }}
-                        className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                        className="w-full h-full object-contain transition-transform duration-500 hover:scale-105"
                       />
-                      <div className="absolute top-3 right-3 bg-secondary text-white rounded-full px-3.5 py-1 text-sm font-bold shadow-md">
+                      <div className="absolute top-2 right-2 bg-secondary text-white rounded-full px-2 sm:px-3.5 py-0.5 sm:py-1 text-xs sm:text-sm font-bold shadow-md">
                         ${product.price}
                       </div>
                     </div>
-                    <div className="p-6">
-                      <h3 className="text-lg font-bold text-gray-800 mb-2 truncate">{product.name}</h3>
-                      <p className="text-gray-500 text-sm mb-5 h-12 overflow-hidden text-ellipsis line-clamp-2">{product.description}</p>
+                    <div className="p-3 sm:p-5 flex flex-col flex-1">
+                      <h3 className="text-xs sm:text-base font-bold text-gray-800 mb-1 truncate">{product.name}</h3>
+                      <p className="text-gray-400 text-[11px] sm:text-xs mb-3 line-clamp-2 hidden xs:block">{product.description}</p>
                       <Link 
                         to={product.isDummy ? "/collection" : `/product/${product._id}`} 
-                        className="block w-full"
+                        className="block w-full mt-auto"
                       >
-                        <button className="w-full bg-gradient-to-r from-secondary to-indigo-500 hover:from-secondary/90 hover:to-indigo-600 text-white py-2.5 rounded-xl font-medium transition-all duration-300 shadow-sm">
+                        <button className="w-full bg-gradient-to-r from-secondary to-indigo-500 hover:from-secondary/90 hover:to-indigo-600 text-white py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-all duration-300 shadow-sm">
                           View Details
                         </button>
                       </Link>

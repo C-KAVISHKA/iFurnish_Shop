@@ -122,15 +122,15 @@ const PlaceOrder = () => {
   return (
     <div>
       <div className="bg-primary mb-16">
-        <form onSubmit={onSubmitHandler} className="max-padd-container py-10">
-          <div className="flex flex-col xl:flex-row gap-20 xl:gap-28">
-            <div className="flex flex-1 flex-col gap-3 text-[95%]">
+        <form onSubmit={onSubmitHandler} className="max-padd-container py-8 sm:py-10">
+          <div className="flex flex-col xl:flex-row gap-8 xl:gap-16">
+            <div className="flex flex-1 flex-col gap-3.5 bg-white p-5 sm:p-8 rounded-3xl shadow-sm border border-gray-100">
               <Title
                 title1={"Delivery"}
                 title2={"Information"}
                 titleStyles={"h3"}
               />
-              <div className="flex gap-3">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <input
                   onChange={onChangeHandler}
                   value={formData.firstName}
@@ -138,7 +138,7 @@ const PlaceOrder = () => {
                   type="text"
                   placeholder="First Name"
                   required
-                  className="ring-1 ring-slate-900/15 p-1 pl-3 rounded-sm bg-white outline-none w-1/2"
+                  className="ring-1 ring-slate-900/10 p-2.5 sm:p-3 text-xs sm:text-sm rounded-xl bg-gray-50/50 outline-none focus:ring-2 focus:ring-secondary w-full sm:w-1/2"
                 />
                 <input
                   onChange={onChangeHandler}
@@ -147,7 +147,7 @@ const PlaceOrder = () => {
                   type="text"
                   placeholder="Last Name"
                   required
-                  className="ring-1 ring-slate-900/15 p-1 pl-3 rounded-sm bg-white outline-none w-1/2"
+                  className="ring-1 ring-slate-900/10 p-2.5 sm:p-3 text-xs sm:text-sm rounded-xl bg-gray-50/50 outline-none focus:ring-2 focus:ring-secondary w-full sm:w-1/2"
                 />
               </div>
               <input
@@ -155,9 +155,9 @@ const PlaceOrder = () => {
                 value={formData.email}
                 name="email"
                 type="email"
-                placeholder="Email"
+                placeholder="Email Address"
                 required
-                className="ring-1 ring-slate-900/15 p-1 pl-3 rounded-sm bg-white outline-none"
+                className="ring-1 ring-slate-900/10 p-2.5 sm:p-3 text-xs sm:text-sm rounded-xl bg-gray-50/50 outline-none focus:ring-2 focus:ring-secondary w-full"
               />
               <input
                 onChange={onChangeHandler}
@@ -166,18 +166,18 @@ const PlaceOrder = () => {
                 type="tel"
                 placeholder="Contact Number"
                 required
-                className="ring-1 ring-slate-900/15 p-1 pl-3 rounded-sm bg-white outline-none"
+                className="ring-1 ring-slate-900/10 p-2.5 sm:p-3 text-xs sm:text-sm rounded-xl bg-gray-50/50 outline-none focus:ring-2 focus:ring-secondary w-full"
               />
               <input
                 onChange={onChangeHandler}
                 value={formData.street}
                 name="street"
                 type="text"
-                placeholder="Street"
+                placeholder="Street Address"
                 required
-                className="ring-1 ring-slate-900/15 p-1 pl-3 rounded-sm bg-white outline-none"
+                className="ring-1 ring-slate-900/10 p-2.5 sm:p-3 text-xs sm:text-sm rounded-xl bg-gray-50/50 outline-none focus:ring-2 focus:ring-secondary w-full"
               />
-              <div className="flex gap-3">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <input
                   onChange={onChangeHandler}
                   value={formData.city}
@@ -185,7 +185,7 @@ const PlaceOrder = () => {
                   name="city"
                   placeholder="City"
                   required
-                  className="ring-1 ring-slate-900/15 p-1 pl-3 rounded-sm bg-white outline-none w-1/2"
+                  className="ring-1 ring-slate-900/10 p-2.5 sm:p-3 text-xs sm:text-sm rounded-xl bg-gray-50/50 outline-none focus:ring-2 focus:ring-secondary w-full sm:w-1/2"
                 />
                 <input
                   onChange={onChangeHandler}
@@ -194,10 +194,10 @@ const PlaceOrder = () => {
                   type="text"
                   placeholder="Province"
                   required
-                  className="ring-1 ring-slate-900/15 p-1 pl-3 rounded-sm bg-white outline-none w-1/2"
+                  className="ring-1 ring-slate-900/10 p-2.5 sm:p-3 text-xs sm:text-sm rounded-xl bg-gray-50/50 outline-none focus:ring-2 focus:ring-secondary w-full sm:w-1/2"
                 />
               </div>
-              <div className="flex gap-3">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <input
                   onChange={onChangeHandler}
                   value={formData.zipcode}
@@ -205,7 +205,7 @@ const PlaceOrder = () => {
                   name="zipcode"
                   placeholder="Zip Code"
                   required
-                  className="ring-1 ring-slate-900/15 p-1 pl-3 rounded-sm bg-white outline-none w-1/2"
+                  className="ring-1 ring-slate-900/10 p-2.5 sm:p-3 text-xs sm:text-sm rounded-xl bg-gray-50/50 outline-none focus:ring-2 focus:ring-secondary w-full sm:w-1/2"
                 />
                 <input
                   onChange={onChangeHandler}
@@ -214,31 +214,50 @@ const PlaceOrder = () => {
                   type="text"
                   placeholder="District"
                   required
-                  className="ring-1 ring-slate-900/15 p-1 pl-3 rounded-sm bg-white outline-none w-1/2"
+                  className="ring-1 ring-slate-900/10 p-2.5 sm:p-3 text-xs sm:text-sm rounded-xl bg-gray-50/50 outline-none focus:ring-2 focus:ring-secondary w-full sm:w-1/2"
                 />
               </div>
             </div>
-            <div className="flex flex-1 flex-col">
+
+            {/* Cart Total and Payment Card */}
+            <div className="flex flex-1 flex-col bg-white p-5 sm:p-8 rounded-3xl shadow-sm border border-gray-100">
               <CartTotal />
-              <div className="my-6">
-                <h3 className="bold-20 mb-5">
-                  Payment{" "}
-                  <span className="text-secondary font-medium">Methods</span>
+              <div className="my-6 pt-4 border-t border-gray-100">
+                <h3 className="text-base sm:text-lg font-bold mb-4 text-gray-800">
+                  Payment <span className="text-secondary font-medium">Method</span>
                 </h3>
-                <div className="flex gap-3">
-                <div className="flex gap-3">
-                  <div onClick={() => setMethod("cod")} className={`${method === "cod" ? "btn-dark" : "btn-white"} !py-1 text-xs cursor-pointer`}>Cash on Delivery</div>
-                  <div onClick={() => setMethod("stripe")} className={`${method === "stripe" ? "btn-dark" : "btn-white"} !py-1 text-xs cursor-pointer`}>Stripe</div>
-                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setMethod("cod")}
+                    className={`py-3 px-4 rounded-xl text-xs sm:text-sm font-semibold transition-all border ${
+                      method === "cod"
+                        ? "bg-secondary text-white border-secondary shadow-md"
+                        : "bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100"
+                    }`}
+                  >
+                    Cash on Delivery
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setMethod("stripe")}
+                    className={`py-3 px-4 rounded-xl text-xs sm:text-sm font-semibold transition-all border ${
+                      method === "stripe"
+                        ? "bg-secondary text-white border-secondary shadow-md"
+                        : "bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100"
+                    }`}
+                  >
+                    Stripe / Card
+                  </button>
                 </div>
               </div>
               <div>
                 <button
                   type="submit"
-                  className="btn-secondary hover:bg-transparent w-full hover:text-black"
+                  className="btn-secondary w-full !py-3 text-xs sm:text-sm shadow-md hover:shadow-lg transition-all"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? "Placing Order" : "Place Order"}
+                  {isSubmitting ? "Placing Order..." : "Place Order"}
                 </button>
               </div>
             </div>

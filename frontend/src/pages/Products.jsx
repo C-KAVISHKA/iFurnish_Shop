@@ -68,9 +68,9 @@ const Products = () => {
         </div>
         
         <div className="relative h-full flex flex-col justify-center items-center text-center px-4 z-10">
-          {/* Using original heading style */}
+          {/* Responsive heading */}
           <motion.h1
-            className="text-8xl md:text-5xl font-extrabold text-yellow-500"
+            className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-yellow-500"
             style={{ fontFamily: "'Dancing Script', cursive" }}
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -79,14 +79,14 @@ const Products = () => {
             Our Products
           </motion.h1>
           
-          {/* Original text animation */}
-          <p className="text-lg md:text-xl text-white mt-2">
+          {/* Subtitle animation */}
+          <p className="text-xs sm:text-base md:text-xl text-white/90 mt-2 max-w-md">
             {text.split("").map((char, index) => (
               <motion.span
                 key={index}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: index * 0.05, duration: 0.1 }}
+                transition={{ delay: index * 0.03, duration: 0.1 }}
               >
                 {char}
               </motion.span>
@@ -95,136 +95,114 @@ const Products = () => {
           
           {/* Search Bar */}
           <motion.div 
-            className="mt-8 w-full max-w-xl relative"
+            className="mt-5 sm:mt-8 w-full max-w-xl relative px-2 sm:px-0"
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.6, duration: 0.8 }}
+            transition={{ delay: 0.4, duration: 0.8 }}
           >
             <div className="relative flex items-center">
               <input
                 type="text"
                 placeholder="Search products..."
-                className="w-full px-6 py-4 rounded-full shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-700 pr-12"
+                className="w-full px-5 py-3 sm:px-6 sm:py-4 text-xs sm:text-sm rounded-full shadow-md focus:outline-none focus:ring-2 focus:ring-secondary text-gray-700 pr-12 bg-white/95 backdrop-blur-sm"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
-              <Search className="absolute right-4 text-gray-400" size={20} />
+              <Search className="absolute right-4 text-gray-400" size={18} />
             </div>
           </motion.div>
         </div>
       </motion.div>
       
       {/* Main Content Area */}
-      <div className="max-w-7xl mx-auto px-4 py-12">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-8 sm:py-12">
         {/* Category Navigation */}
-        <div className="mb-8 flex flex-wrap items-center justify-between">
-          <div className="flex items-center mb-4 md:mb-0">
-            <button 
-              onClick={() => setIsFilterOpen(!isFilterOpen)}
-              className="md:hidden flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-full shadow-sm text-gray-700 mr-2"
-            >
-              <Filter size={16} />
-              <span>Filters</span>
-            </button>
-            
-            <div className={`${isFilterOpen ? 'flex' : 'hidden'} md:flex flex-wrap gap-2`}>
-              {categories.map(category => (
-                <button
-                  key={category}
-                  onClick={() => setActiveCategory(category)}
-                  className={`px-4 py-2 rounded-full text-sm transition-all duration-300 ${
-                    activeCategory === category
-                      ? 'bg-indigo-600 text-white shadow-md'
-                      : 'bg-gray-50 text-white hover:bg-gray-100 hover:text-gray-700'
-                  }`}
-                >
-                  {category}
-                </button>
-              ))}
-            </div>
+        <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div className="w-full sm:w-auto overflow-x-auto pb-1 flex items-center gap-1.5 sm:gap-2">
+            {categories.map(category => (
+              <button
+                key={category}
+                onClick={() => setActiveCategory(category)}
+                className={`px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 whitespace-nowrap ${
+                  activeCategory === category
+                    ? 'bg-secondary text-white shadow-md'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                {category}
+              </button>
+            ))}
           </div>
           
-          <p className="text-gray-500">
+          <p className="text-gray-400 text-xs sm:text-sm">
             Showing {filteredProducts.length} of {products.length} products
           </p>
         </div>
         
-        {/* Products Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        {/* Products Grid - 2 Column Mobile */}
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
           {filteredProducts.map((product, index) => (
             <motion.div
               key={product._id}
-              className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100"
+              className="bg-white rounded-2xl sm:rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 flex flex-col justify-between"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1, duration: 0.5 }}
+              transition={{ delay: index * 0.05, duration: 0.4 }}
             >
               <div className="relative overflow-hidden group">
-                {/* Link to single product */}
-                <Link to={`/single-product/${product._id}`} className="block cursor-pointer">
+                <Link to={`/single-product/${product._id}`} className="block cursor-pointer bg-gradient-to-br from-gray-50 to-gray-100/50 flexCenter">
                   <img
                     src={product.image[0]}
                     alt={product.name}
-                    className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
+                    className="w-full h-36 xs:h-44 sm:h-56 object-contain p-2 sm:p-3 transition-transform duration-500 group-hover:scale-105"
                   />
                   
                   <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300"></div>
                 </Link>
                 
-                {product.isNew && (
-                  <div className="absolute top-3 left-3 bg-indigo-600 text-white px-3 py-1 rounded-full text-xs font-medium">
-                    NEW
-                  </div>
-                )}
-                
-                {product.discount && (
-                  <div className="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-medium">
-                    {product.discount}% OFF
+                {product.popular && (
+                  <div className="absolute top-2 left-2 bg-secondary text-white px-2 sm:px-3 py-0.5 rounded-full text-[10px] sm:text-xs font-bold shadow-sm">
+                    POPULAR
                   </div>
                 )}
               </div>
               
-              <div className="p-5">
-                <div className="flex items-center mb-2">
+              <div className="p-3 sm:p-5 flex flex-col flex-1">
+                <div className="flex items-center mb-1 sm:mb-2">
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
-                      size={16}
+                      size={12}
                       className={i < (product.rating || 4) ? "text-yellow-400 fill-yellow-400" : "text-gray-200"}
                     />
                   ))}
-                  <span className="text-xs text-gray-500 ml-2">
-                    ({product.reviews || Math.floor(Math.random() * 100) + 10})
+                  <span className="text-[10px] sm:text-xs text-gray-400 ml-1">
+                    (4.8)
                   </span>
                 </div>
                 
                 <Link to={`/single-product/${product._id}`} className="block">
-                  <h3 className="font-medium text-gray-900 text-lg mb-1 hover:text-indigo-600 transition-colors">
+                  <h3 className="font-bold text-gray-800 text-xs sm:text-base mb-1 hover:text-secondary transition-colors line-clamp-1">
                     {product.name}
                   </h3>
                 </Link>
                 
-                <p className="text-gray-500 text-sm line-clamp-2 mb-3">
+                <p className="text-gray-400 text-[11px] sm:text-xs line-clamp-2 mb-3 hidden xs:block">
                   {product.description}
                 </p>
                 
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between mt-auto pt-2">
                   <div>
-                    {product.oldPrice && (
-                      <span className="text-gray-400 line-through text-sm mr-2">
-                        ${product.oldPrice}
-                      </span>
-                    )}
-                    <span className="text-indigo-600 font-bold text-lg">
+                    <span className="text-secondary font-bold text-sm sm:text-lg">
                       ${product.price}
                     </span>
                   </div>
                   
                   <button
-                    onClick={() => addToCart(product)}
-                    className="bg-indigo-50 hover:bg-indigo-100 text-indigo-600 px-3 py-1 rounded-full text-sm transition-colors duration-300"
+                    onClick={() => addToCart(product._id, product.sizes?.[0] || "Wood")}
+                    className="bg-gradient-to-r from-secondary to-[#d4795f] text-white px-2.5 sm:px-3.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-semibold hover:shadow-md transition-all"
                   >
-                    Add to cart
+                    Add
                   </button>
                 </div>
               </div>
@@ -234,13 +212,13 @@ const Products = () => {
         
         {/* Empty State */}
         {filteredProducts.length === 0 && (
-          <div className="text-center py-16 bg-gray-50 rounded-2xl">
-            <Search size={48} className="mx-auto text-gray-300 mb-4" />
-            <h3 className="text-xl font-medium text-gray-700 mb-2">No products found</h3>
-            <p className="text-gray-500 mb-6">Try changing your search or filter criteria</p>
+          <div className="text-center py-16 bg-gray-50 rounded-2xl p-4">
+            <Search size={40} className="mx-auto text-gray-300 mb-4" />
+            <h3 className="text-lg font-medium text-gray-700 mb-2">No products found</h3>
+            <p className="text-gray-500 text-xs sm:text-sm mb-4">Try changing your search or filter criteria</p>
             <button 
               onClick={() => {setSearchTerm(''); setActiveCategory('All');}}
-              className="px-6 py-3 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition-colors duration-300"
+              className="px-5 py-2.5 bg-secondary text-white text-xs sm:text-sm rounded-full hover:bg-secondary/90 transition-colors"
             >
               Reset filters
             </button>

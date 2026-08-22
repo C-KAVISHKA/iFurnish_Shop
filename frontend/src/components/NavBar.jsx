@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-const NavBar = ({ containerStyles }) => {
+const NavBar = ({ containerStyles, onLinkClick }) => {
   const navLinks = [
     { title: "Home", path: "/" },
     { title: "Collection", path: "/collection" },
@@ -16,13 +16,14 @@ const NavBar = ({ containerStyles }) => {
         <NavLink
           key={link.title}
           to={link.path}
+          onClick={onLinkClick}
           className={({ isActive }) =>
             `${
               isActive ? "active-link" : "link-inactive"
-            } px-4 py-2 rounded-full`
+            } px-4 py-2.5 rounded-full transition-all duration-300`
           }
         >
-          <div className="flexCenter gap-x-1 ">{link.title}</div>
+          <div className="flexCenter gap-x-1">{link.title}</div>
         </NavLink>
       ))}
     </nav>

@@ -21,7 +21,7 @@ const RelatedProducts = ({ category, subCategory }) => {
   return (
     <section>
       <Title title1={"Related"} title2={"Products"} titleStyles={"pb-10"} />
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
         {related.map((product, i) => (
           <Item key={product._id} product={product} />
         ))}

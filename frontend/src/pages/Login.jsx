@@ -68,33 +68,35 @@ const Login = () => {
   }, [token]);
 
   return (
-    <div className="absolute top-0 left-0 w-full h-full z-50 bg-white">
+    <div className="fixed inset-0 w-full h-full z-50 bg-white overflow-y-auto">
       <button
         onClick={() => navigate("/")}
-        className="absolute top-5 left-5 flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg border border-gray-300 shadow-sm transition-all duration-300 z-10"
+        className="absolute top-4 left-4 flex items-center gap-2 px-3 sm:px-4 py-2 bg-gray-100/90 hover:bg-gray-200 text-gray-700 rounded-xl border border-gray-200 shadow-sm transition-all duration-300 z-10 text-xs sm:text-sm"
       >
-        <FaArrowLeft className="text-sm" />
-        <span className="text-sm font-medium">
+        <FaArrowLeft className="text-xs" />
+        <span>
           Back to <span className="font-bold text-gray-900">iFurnish</span>
-          <span className="font-bold text-yellow-600">Shop</span>
+          <span className="font-bold text-secondary">Shop</span>
         </span>
       </button>
-      <div className="flex h-full w-full">
-        <div className="w-1/2 hidden sm:block">
-          <img src={login} alt="logo" className="object-cover w-full h-full" />
+      <div className="flex min-h-full w-full">
+        <div className="w-1/2 hidden md:block">
+          <img src={login} alt="logo" className="object-cover w-full h-full min-h-screen" />
         </div>
-        <div className="flex w-full sm:w-1/2 items-center justify-center text-[90%]">
+        <div className="flex w-full md:w-1/2 items-center justify-center p-6 py-20 my-auto">
           <form
             onSubmit={onSubmitHandler}
-            className="flex flex-col items-center w-[90%] sm:max-w-md m-auto gap-y-5"
+            className="flex flex-col items-center w-full max-w-sm m-auto gap-y-4"
           >
-            <div className="w-full mb-4">
-              <h3 className="bold-36">{currState}</h3>
+            <div className="w-full mb-2 text-center sm:text-left">
+              <h3 className="text-2xl sm:text-3xl font-bold text-gray-800">{currState}</h3>
+              <p className="text-xs text-gray-400 mt-1">
+                {currState === "Login" ? "Welcome back! Please enter your details." : "Create your account to start shopping."}
+              </p>
             </div>
             {currState === "Sign Up" && (
-
               <div className="w-full">
-                <label htmlFor="name" className="medium-15">
+                <label htmlFor="name" className="text-xs font-bold text-gray-700 uppercase tracking-wider block mb-1">
                   Name
                 </label>
                 <input
@@ -102,28 +104,28 @@ const Login = () => {
                   value={name}
                   type="text"
                   id="name"
-                  placeholder="Name"
-                  className="w-full px-3 py-1 ring-1 ring-slate-900/10 rounded bg-primary mt-1"
+                  placeholder="Full Name"
+                  className="w-full px-4 py-2.5 ring-1 ring-slate-900/10 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-secondary outline-none text-xs sm:text-sm transition-all"
                   required
                 />
               </div>
             )}
             <div className="w-full">
-              <label htmlFor="email" className="medium-15">
+              <label htmlFor="email" className="text-xs font-bold text-gray-700 uppercase tracking-wider block mb-1">
                 Email
               </label>
               <input
                 onChange={(e) => setEmail(e.target.value)}
                 value={email}
-                type="text"
+                type="email"
                 id="email"
-                placeholder="Email"
-                className="w-full px-3 py-1 ring-1 ring-slate-900/10 rounded bg-primary mt-1"
+                placeholder="Email Address"
+                className="w-full px-4 py-2.5 ring-1 ring-slate-900/10 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-secondary outline-none text-xs sm:text-sm transition-all"
                 required
               />
             </div>
             <div className="w-full">
-              <label htmlFor="password" className="medium-15">
+              <label htmlFor="password" className="text-xs font-bold text-gray-700 uppercase tracking-wider block mb-1">
                 Password
               </label>
               <input
@@ -132,43 +134,46 @@ const Login = () => {
                 type="password"
                 id="password"
                 placeholder="Password"
-                className="w-full px-3 py-1 ring-1 ring-slate-900/10 rounded bg-primary mt-1"
+                className="w-full px-4 py-2.5 ring-1 ring-slate-900/10 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-secondary outline-none text-xs sm:text-sm transition-all"
                 required
               />
             </div>
+            <div className="w-full flex justify-between text-xs text-gray-500 mt-1">
+              <button
+                type="button"
+                onClick={handleForgotPassword}
+                className="hover:text-secondary underline"
+              >
+                Forgot your password?
+              </button>
+            </div>
             <button
               type="submit"
-              className="btn-dark w-full mt-5 !py-[8px] !rounded-lg hover:bg-slate-800"
+              className="btn-secondary w-full !py-3 rounded-xl text-xs sm:text-sm font-semibold shadow-md hover:shadow-lg transition-all mt-2"
             >
-              {currState === "Sign Up" ? "Sign Up" : "Sign In"}
+              {currState === "Login" ? "Sign In" : "Create Account"}
             </button>
-            <div className="flex w-full flex-col gap-y-3">
-              <div
-                onClick={handleForgotPassword}
-                className="medium-15 cursor-pointer hover:text-yellow-600 transition-colors"
-              >
-                Forgot Password?
-              </div>
+            <div className="w-full text-center text-xs text-gray-500 mt-2">
               {currState === "Login" ? (
-                <div>
-                  Don&apos;t have an account?{" "}
+                <p>
+                  Don't have an account?{" "}
                   <span
                     onClick={() => setCurrState("Sign Up")}
-                    className="cursor-pointer font-semibold text-yellow-600"
+                    className="text-secondary font-bold cursor-pointer hover:underline"
                   >
-                    Create An Account
+                    Sign Up
                   </span>
-                </div>
+                </p>
               ) : (
-                <div>
+                <p>
                   Already have an account?{" "}
                   <span
                     onClick={() => setCurrState("Login")}
-                    className="cursor-pointer font-semibold text-green-600"
+                    className="text-secondary font-bold cursor-pointer hover:underline"
                   >
                     Sign In
                   </span>
-                </div>
+                </p>
               )}
             </div>
           </form>

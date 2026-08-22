@@ -15,6 +15,7 @@ const Header = () => {
   const { getCartCount, navigate } = useContext(ShopContext);
   const { token, setToken, CartCount } = useContext(ProductContext);
   const [menuOpened, setMenuOpened] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [showAITooltip, setShowAITooltip] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -35,16 +36,17 @@ const Header = () => {
   const logout = () => {
     localStorage.removeItem("token");
     setToken("");
+    setUserMenuOpen(false);
     navigate("/login");
   };
 
   return (
-    <header className={`header-sticky w-full px-4 sm:px-6 lg:px-8 ${scrolled ? "header-scrolled" : ""}`}>
+    <header className={`header-sticky w-full px-3 sm:px-6 lg:px-8 ${scrolled ? "header-scrolled" : ""}`}>
       <div className="flex items-center justify-between py-2 sm:py-3 max-w-[1440px] mx-auto">
         {/* Logo - Responsive sizing */}
         <Link to="/" className="flex items-center gap-x-2 group">
           <motion.div 
-            className="text-xl font-bold sm:text-2xl md:text-3xl tracking-tight text-tertiary"
+            className="text-lg font-bold xs:text-xl sm:text-2xl md:text-3xl tracking-tight text-tertiary"
             whileHover={{ scale: 1.02 }}
             transition={{ type: "spring", stiffness: 400, damping: 25 }}
           >
@@ -60,18 +62,7 @@ const Header = () => {
         </div>
 
         {/* Action Icons - Fully responsive */}
-        <div className="flex items-center gap-x-1 xs:gap-x-2 sm:gap-x-4 md:gap-x-6">
-          {/* Mobile Menu Toggle */}
-          <motion.div
-            whileTap={{ scale: 0.9 }}
-            className="xl:hidden"
-          >
-            <FaBarsStaggered
-              onClick={toggleMenu}
-              className="cursor-pointer text-lg sm:text-xl hover:text-secondary transition-colors duration-300"
-            />
-          </motion.div>
-          
+        <div className="flex items-center gap-x-2 sm:gap-x-4 md:gap-x-6">
           {/* AI-Powered Search - Responsive */}
           <div 
             className="relative"
@@ -84,9 +75,7 @@ const Header = () => {
               whileHover={{ scale: 1.08 }}
               whileTap={{ scale: 0.95 }}
             >
-              {/* Base search icon for all devices */}
-              <div className="flex items-center gap-x-1 bg-gradient-to-r from-secondary/10 to-secondary/5 p-1.5 sm:p-2 rounded-full hover:from-secondary/15 hover:to-secondary/10 transition-all duration-300">
-                {/* AI icon - hidden on smallest screens */}
+              <div className="flex items-center gap-x-1 bg-gradient-to-r from-secondary/10 to-secondary/5 p-2 rounded-full hover:from-secondary/15 hover:to-secondary/10 transition-all duration-300">
                 <motion.div
                   className="hidden xs:block"
                   initial={{ scale: 1 }}
@@ -99,13 +88,13 @@ const Header = () => {
                     repeatType: "reverse"
                   }}
                 >
-                  <RiAiGenerate className="text-base sm:text-lg text-secondary" />
+                  <RiAiGenerate className="text-sm sm:text-lg text-secondary" />
                 </motion.div>
-                <FaSearch className="text-base sm:text-lg" />
+                <FaSearch className="text-sm sm:text-lg text-gray-700" />
               </div>
             </motion.div>
             
-            {/* Tooltip - Responsive positioning */}
+            {/* Tooltip */}
             <AnimatePresence>
               {showAITooltip && (
                 <motion.div 
@@ -123,30 +112,30 @@ const Header = () => {
           </div>
           
           {/* AI Assistant */}
-          <Link to="/ai-assistant" className="relative cursor-pointer flex">
+          <Link to="/ai-assistant" className="relative cursor-pointer flex items-center">
             <motion.img
               src={chatbotIcon}
               alt="chatbot"
-              className="w-6 h-6 xs:w-7 xs:h-7 sm:w-8 sm:h-8"
+              className="w-6 h-6 sm:w-8 sm:h-8"
               animate={{
                 rotate: [0, 10, -10, 0],
-                y: [0, -5, 0],
+                y: [0, -4, 0],
               }}
               transition={{
                 duration: 2,
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              whileHover={{ scale: 1.2 }}
+              whileHover={{ scale: 1.15 }}
             />
           </Link>
 
           {/* Cart */}
-          <Link to="/cart" className="relative cursor-pointer flex">
+          <Link to="/cart" className="relative cursor-pointer flex items-center">
             <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-              <TbBasket className="text-xl xs:text-2xl sm:text-[27px]" />
+              <TbBasket className="text-2xl sm:text-[27px] text-gray-700 hover:text-secondary transition-colors" />
               <motion.span 
-                className="bg-gradient-to-r from-secondary to-[#d4795f] text-white text-[10px] xs:text-[11px] sm:text-[12px] absolute font-semibold left-1 -top-2 xs:left-1.5 xs:-top-2.5 sm:-top-3.5 flexCenter w-3.5 h-3.5 xs:w-4 xs:h-4 sm:w-[18px] sm:h-[18px] rounded-full shadow-md"
+                className="bg-gradient-to-r from-secondary to-[#d4795f] text-white text-[10px] sm:text-[11px] absolute font-bold -top-1.5 -right-2 flexCenter min-w-[18px] h-[18px] px-1 rounded-full shadow-md"
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", stiffness: 500, damping: 25 }}
@@ -157,47 +146,73 @@ const Header = () => {
           </Link>
 
           {/* User Menu */}
-          <div className="group relative">
-            <div>
-              {token ? (
-                <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
-                  <FaRegCircleUser className="text-lg sm:text-xl md:text-[20px] cursor-pointer hover:text-secondary transition-colors duration-300" />
-                </motion.div>
-              ) : (
-                <motion.button
-                  onClick={() => navigate("/login")}
-                  className="bg-gradient-to-r from-gray-50 to-gray-100 hover:from-secondary hover:to-[#d4795f] hover:text-white text-xs xs:text-sm rounded-full py-1.5 px-3 sm:py-2 sm:px-4 cursor-pointer flex items-center justify-center gap-x-1 sm:gap-x-2 transition-all duration-300 font-medium shadow-sm hover:shadow-md"
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                >
-                  Login <RiUserLine className="text-lg sm:text-xl" />
-                </motion.button>
-              )}
-            </div>
-            {token && (
-              <ul className="bg-white/95 backdrop-blur-md p-2 w-28 sm:w-36 ring-1 ring-slate-900/5 rounded-xl absolute right-0 top-6 sm:top-7 hidden group-hover:flex flex-col text-xs sm:text-sm shadow-xl z-50 overflow-hidden">
-                <li className="hover:bg-secondary/10 rounded-lg cursor-pointer text-tertiary p-2 sm:p-2.5 transition-colors duration-200">
-                  <Link to="/profile">Profile</Link>
-                </li>
-                <li
-                  onClick={() => navigate("orders")}
-                  className="hover:bg-secondary/10 rounded-lg cursor-pointer text-tertiary p-2 sm:p-2.5 transition-colors duration-200"
-                >
-                  Orders
-                </li>
-                <li
-                  onClick={logout}
-                  className="hover:bg-red-50 hover:text-red-500 rounded-lg cursor-pointer text-tertiary p-2 sm:p-2.5 transition-colors duration-200"
-                >
-                  Logout
-                </li>
-              </ul>
+          <div className="relative">
+            {token ? (
+              <motion.div 
+                whileHover={{ scale: 1.1 }} 
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setUserMenuOpen(!userMenuOpen)}
+              >
+                <FaRegCircleUser className="text-xl sm:text-[22px] cursor-pointer hover:text-secondary transition-colors duration-300 text-gray-700" />
+              </motion.div>
+            ) : (
+              <motion.button
+                onClick={() => navigate("/login")}
+                className="bg-gradient-to-r from-gray-50 to-gray-100 hover:from-secondary hover:to-[#d4795f] hover:text-white text-xs sm:text-sm rounded-full py-1.5 px-3 sm:py-2 sm:px-4 cursor-pointer flex items-center justify-center gap-x-1 sm:gap-x-2 transition-all duration-300 font-medium shadow-sm"
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+              >
+                Login <RiUserLine className="text-base sm:text-lg" />
+              </motion.button>
             )}
+            
+            {/* User Dropdown (Works on mobile tap & desktop click) */}
+            <AnimatePresence>
+              {token && userMenuOpen && (
+                <motion.ul 
+                  initial={{ opacity: 0, scale: 0.95, y: -5 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: -5 }}
+                  transition={{ duration: 0.15 }}
+                  className="bg-white/95 backdrop-blur-md p-2 w-32 sm:w-36 ring-1 ring-slate-900/5 rounded-2xl absolute right-0 top-9 flex flex-col text-xs sm:text-sm shadow-xl z-50 overflow-hidden"
+                >
+                  <li 
+                    onClick={() => { setUserMenuOpen(false); navigate("/profile"); }}
+                    className="hover:bg-secondary/10 rounded-xl cursor-pointer text-tertiary p-2 sm:p-2.5 transition-colors duration-200"
+                  >
+                    Profile
+                  </li>
+                  <li
+                    onClick={() => { setUserMenuOpen(false); navigate("orders"); }}
+                    className="hover:bg-secondary/10 rounded-xl cursor-pointer text-tertiary p-2 sm:p-2.5 transition-colors duration-200"
+                  >
+                    Orders
+                  </li>
+                  <li
+                    onClick={logout}
+                    className="hover:bg-red-50 hover:text-red-500 rounded-xl cursor-pointer text-tertiary p-2 sm:p-2.5 transition-colors duration-200"
+                  >
+                    Logout
+                  </li>
+                </motion.ul>
+              )}
+            </AnimatePresence>
           </div>
+
+          {/* Mobile Menu Toggle Hamburger */}
+          <motion.div
+            whileTap={{ scale: 0.9 }}
+            className="xl:hidden ml-1"
+          >
+            <FaBarsStaggered
+              onClick={toggleMenu}
+              className="cursor-pointer text-xl text-gray-700 hover:text-secondary transition-colors duration-300"
+            />
+          </motion.div>
         </div>
       </div>
 
-      {/* Mobile Navigation Menu - Only shown when toggled */}
+      {/* Mobile Navigation Drawer */}
       <AnimatePresence>
         {menuOpened && (
           <motion.div 
@@ -205,11 +220,14 @@ const Header = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
+            transition={{ duration: 0.25, ease: "easeInOut" }}
           >
-            <NavBar
-              containerStyles="flex items-start flex-col w-full max-w-xs mx-auto gap-y-1 p-4 bg-white/95 backdrop-blur-md rounded-2xl shadow-xl ring-1 ring-slate-900/5 z-50 mt-2 mb-3"
-            />
+            <div className="bg-white/95 backdrop-blur-xl p-4 rounded-3xl shadow-xl ring-1 ring-slate-900/5 z-50 my-2">
+              <NavBar
+                onLinkClick={() => setMenuOpened(false)}
+                containerStyles="flex flex-col w-full gap-y-1.5"
+              />
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

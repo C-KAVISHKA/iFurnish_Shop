@@ -83,12 +83,13 @@ const Hero = () => {
   const handleMouseEnter = () => setShowControls(true);
   const handleMouseLeave = () => setShowControls(false);
   return (
-    <section className="max-padd-container bg-hero bg-cover bg-center bg-no-repeat h-[667px] w-full mb-10 relative rounded-[2.5rem] overflow-hidden shadow-2xl">
+    <section className="max-padd-container bg-hero bg-cover bg-center bg-no-repeat min-h-[580px] sm:min-h-[667px] h-auto w-full mb-10 relative rounded-[1.75rem] sm:rounded-[2.5rem] overflow-hidden shadow-2xl p-5 sm:p-8 lg:p-12 flex flex-col justify-between">
       {/* Dark overlay for rich contrast */}
-      <div className="absolute inset-0 bg-black/25 z-0"></div>
+      <div className="absolute inset-0 bg-black/30 z-0"></div>
 
+      {/* Floating Video Showcase */}
       <div
-        className="relative z-10 glassmorphism p-3 rounded-[1.75rem] max-w-[233px] top-8 xl:top-12 shadow-2xl border border-white/30 transition-all duration-300 hover:scale-105"
+        className="relative z-10 glassmorphism p-2.5 sm:p-3 rounded-2xl sm:rounded-[1.75rem] w-fit max-w-[190px] xs:max-w-[210px] sm:max-w-[233px] shadow-2xl border border-white/30 transition-all duration-300 hover:scale-105"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
@@ -96,9 +97,7 @@ const Hero = () => {
           <video
             ref={videoRef}
             src={videoFiles[currentVideo]}
-            height={211}
-            width={211}
-            className="rounded-2xl mb-3 transition-opacity duration-300"
+            className="rounded-xl sm:rounded-2xl mb-2 sm:mb-3 w-full h-auto object-cover transition-opacity duration-300 aspect-square"
             autoPlay
             loop={false}
             muted
@@ -111,7 +110,7 @@ const Hero = () => {
           {/* Play Button (Shows when video is paused) */}
           {!isPlaying && (
             <button
-              className={`absolute top-1/2 left-1/2 flexCenter -translate-x-1/2 -translate-y-1/2 h-12 w-12 bg-secondary rounded-full transition-opacity duration-300 ${
+              className={`absolute top-1/2 left-1/2 flexCenter -translate-x-1/2 -translate-y-1/2 h-10 w-10 sm:h-12 sm:w-12 bg-secondary rounded-full transition-opacity duration-300 ${
                 showControls ? "opacity-100" : "opacity-0"
               }`}
               onClick={() => {
@@ -120,41 +119,42 @@ const Hero = () => {
               }}
             >
               <span className="absolute w-full h-full rounded-full bg-white opacity-50 animate-ping"></span>
-              <FaPlay className="text-lg text-white" />
+              <FaPlay className="text-sm sm:text-lg text-white" />
             </button>
           )}
 
           <button
-            className={`absolute left-2 top-1/2 -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full transition-opacity duration-300 ${
+            className={`absolute left-1.5 top-1/2 -translate-y-1/2 bg-black/60 text-white p-1.5 sm:p-2 rounded-full transition-opacity duration-300 ${
               showControls ? "opacity-100" : "opacity-0"
             }`}
             onClick={prevVideo}
           >
-            <FaArrowLeft />
+            <FaArrowLeft className="text-xs sm:text-sm" />
           </button>
           <button
-            className={`absolute right-2 top-1/2 -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full transition-opacity duration-300 ${
+            className={`absolute right-1.5 top-1/2 -translate-y-1/2 bg-black/60 text-white p-1.5 sm:p-2 rounded-full transition-opacity duration-300 ${
               showControls ? "opacity-100" : "opacity-0"
             }`}
             onClick={nextVideo}
           >
-            <FaArrowRight />
+            <FaArrowRight className="text-xs sm:text-sm" />
           </button>
         </div>
 
         {/* Description */}
-        <p className="text-[13px] text-white/90">
+        <p className="text-[11px] sm:text-[13px] text-white/90 leading-tight">
           <b className="uppercase text-secondary">UNLOCK</b> your dream home with our curated
           furniture selection
         </p>
       </div>
 
-      <div className="relative z-10 mt-12 sm:mt-20 xl:mt-40 max-w-[777px]">
+      {/* Main Headline & CTA */}
+      <div className="relative z-10 mt-6 sm:mt-10 max-w-[777px]">
         <motion.h5
           variants={fadeDown(0.4)}
           initial="hidden"
           whileInView="show"
-          className="flex items-center gap-x-2 uppercase text-secondary tracking-widest text-xs font-bold mb-4"
+          className="flex items-center gap-x-2 uppercase text-secondary tracking-widest text-[11px] sm:text-xs font-bold mb-2 sm:mb-4"
         >
           URBAN AESTHETIC <BsFire />
         </motion.h5>
@@ -164,7 +164,7 @@ const Hero = () => {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true }}
-          className="h1 font-extrabold capitalize max-w-[722px] text-white flex flex-wrap gap-x-3 gap-y-2 py-1 overflow-hidden"
+          className="h1 font-extrabold capitalize max-w-[722px] text-white flex flex-wrap gap-x-2 sm:gap-x-3 gap-y-1 sm:gap-y-2 py-1 overflow-hidden"
           style={{ fontFamily: "'Playfair Display', serif", lineHeight: "1.1" }}
         >
           {"Visualise furniture in your space with AR".split(" ").map((word, idx) => (
@@ -175,13 +175,13 @@ const Hero = () => {
             </span>
           ))}
         </motion.h1>
-        <div className="flex mt-8">
+        <div className="flex mt-4 sm:mt-8">
           <Link
             to={"/collection"}
-            className="bg-white hover:bg-slate-50 text-gray-800 text-sm font-semibold pl-6 rounded-full flexCenter gap-x-4 group shadow-lg transition duration-300 hover:shadow-xl"
+            className="bg-white hover:bg-slate-50 text-gray-800 text-xs sm:text-sm font-semibold pl-4 sm:pl-6 rounded-full flexCenter gap-x-2 sm:gap-x-4 group shadow-lg transition duration-300 hover:shadow-xl"
           >
             Check Our Modern Collection
-            <FaArrowRight className="bg-secondary text-white rounded-full w-12 h-12 p-3.5 m-[3px] border border-white group-hover:-rotate-[20deg] transition-all duration-500" />
+            <FaArrowRight className="bg-secondary text-white rounded-full w-9 h-9 sm:w-12 sm:h-12 p-2.5 sm:p-3.5 m-[3px] border border-white group-hover:-rotate-[20deg] transition-all duration-500" />
           </Link>
         </div>
       </div>

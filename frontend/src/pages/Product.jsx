@@ -35,102 +35,123 @@ const Product = () => {
 
   return (
     <div>
-      <div className="max-padd-container ">
-        <div className="flex gap-12 flex-col xl:flex-row bg-primary rounded-2xl p-3 mb-6">
-          <div className="flex flex-1 gap-x-2 xl:flex-1">
-            <div className="flexCenter flex-col gap-[7px] flex-wrap">
+      <div className="max-padd-container">
+        <div className="flex gap-6 sm:gap-12 flex-col xl:flex-row bg-primary rounded-2xl sm:rounded-3xl p-4 sm:p-8 mb-8 sm:mb-12">
+          {/* Product Gallery */}
+          <div className="flex flex-col-reverse sm:flex-row flex-1 gap-3 sm:gap-4 items-center sm:items-start justify-center">
+            {/* Thumbnails */}
+            <div className="flex sm:flex-col gap-2 overflow-x-auto max-w-full p-1 no-scrollbar">
               {product.image.map((img, index) => (
                 <img
-                  className="max-h-[89px] max-w-[95px] rounded-lg"
+                  className={`h-16 w-16 sm:h-20 sm:w-20 object-cover rounded-xl cursor-pointer transition-all border-2 ${
+                    image === img ? "border-secondary shadow-md scale-105" : "border-transparent opacity-75 hover:opacity-100"
+                  }`}
                   src={img}
                   key={index}
-                  alt="product"
+                  alt="product thumbnail"
                   onClick={() => setImage(img)}
                 />
               ))}
-            </div>{" "}
-            <div className="max-h-[377px] max-w-[270px] w-auto flex">
+            </div>
+            {/* Main Image */}
+            <div className="w-full max-w-sm sm:max-w-md aspect-square bg-white rounded-2xl p-4 shadow-sm flexCenter overflow-hidden">
               <img
-                className="bg-gray-10 rounded-xl"
+                className="w-full h-full object-contain transition-transform duration-500 hover:scale-105"
                 src={image}
-                alt="product"
+                alt={product.name}
               />
             </div>
           </div>
-          <div className="flex-[1.5] rounded-2xl xl:px-7">
-            <h3 className="h3 leading-none text-2xl font-bold">
+
+          {/* Product Info & Actions */}
+          <div className="flex-[1.5] rounded-2xl xl:px-6">
+            <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 mb-2">
               {product.name}
             </h3>
-            <div className="flex items-baseline gap-x-5">
-              <div className="flex items-center gap-x-2 text-secondary">
-                <div className="flex gap-x-2 text-secondary">
-                  <FaStar className="text-yellow-400" />
-                  <FaStar className="text-yellow-400" />
-                  <FaStar className="text-yellow-400" />
-                  <FaStar className="text-yellow-400" />
-                  <FaStarHalfAlt className="text-yellow-400" />
-                </div>
-                <span className="text-gray-400 medium-14">(134)</span>
+            <div className="flex items-center gap-x-3 mb-3">
+              <div className="flex items-center gap-x-1 text-yellow-400 text-sm">
+                <FaStar />
+                <FaStar />
+                <FaStar />
+                <FaStar />
+                <FaStarHalfAlt />
               </div>
+              <span className="text-gray-400 text-xs sm:text-sm font-medium">(134 reviews)</span>
             </div>
-            <h4 className="h4 my-2">
+            
+            <h4 className="text-2xl sm:text-3xl font-extrabold text-secondary mb-3">
               {currency}
               {product.price}.00
             </h4>
-            <p className="max-w-[555px]">{product.description}</p>
-            <div className="flex flex-col gap-4 my-4 mb-5">
-              <div className="flex  gap-2">
-                {[...product.sizes]
-                  .sort((a, b) => {
-                    const order = ["XS", "S", "M", "L", "XL", "XXL"];
-                    return order.indexOf(a) - order.indexOf(b);
-                  })
-                  .map((item, i) => (
-                    <button
-                      key={i}
-                      onClick={() => setSize(item)}
-                      className={`border medium-14 h-8 w-20 bg-primary rounded ${
-                        size === item
-                          ? "bg-blue-400 ring-1 ring-slate-900/20 border-gray-90"
-                          : "ring-1 ring-slate-900/5"
-                      }`}
-                    >
-                      {item}
-                    </button>
-                  ))}
+            
+            <p className="text-gray-500 text-xs sm:text-sm leading-relaxed max-w-[555px] mb-5">
+              {product.description}
+            </p>
+
+            {/* Size / Material Selection */}
+            {product.sizes && product.sizes.length > 0 && (
+              <div className="mb-6">
+                <span className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
+                  Select Size / Material:
+                </span>
+                <div className="flex flex-wrap gap-2">
+                  {[...product.sizes]
+                    .sort((a, b) => {
+                      const order = ["XS", "S", "M", "L", "XL", "XXL"];
+                      return order.indexOf(a) - order.indexOf(b);
+                    })
+                    .map((item, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setSize(item)}
+                        className={`text-xs font-semibold px-4 py-2 rounded-xl transition-all ${
+                          size === item
+                            ? "bg-secondary text-white shadow-md shadow-secondary/20"
+                            : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-200"
+                        }`}
+                      >
+                        {item}
+                      </button>
+                    ))}
+                </div>
               </div>
-            </div>
-            <div className="flex items-center gap-x-4">
+            )}
+
+            {/* Action Buttons */}
+            <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 mb-6">
               <button
-                className="bg-secondary !rounded-lg text-white sm:w-1/2 p-3 flexCenter gap-x-2 font-semibold hover:bg-slate-800 transition-all"
+                className="w-full sm:flex-1 bg-secondary text-white font-semibold py-3 px-6 rounded-xl flexCenter gap-x-2 hover:bg-secondary/90 shadow-md hover:shadow-lg transition-all duration-300"
                 onClick={() => addToCart(product._id, size || (product.sizes && product.sizes[0]) || "Standard")}
               >
                 Add to Cart <TbShoppingBagPlus className="text-lg" />
               </button>
-              <button className="btn-light !rounded-lg !py-3.5 gap-x-2">
-                <FaHeart />
-              </button>
-              <Link
-                to={`/arview?model=${getModelForProduct(product)}&price=${
-                  product.price
-                }`}
-              >
-                <button className="btn-light !rounded-lg !py-3.5 gap-x-2" aria-label="View in AR">
-                  <FaCamera />
+              
+              <div className="flex gap-2 w-full sm:w-auto justify-end">
+                <button 
+                  className="p-3.5 bg-white text-gray-600 rounded-xl hover:text-red-500 hover:bg-red-50 transition-colors border border-gray-100 shadow-sm"
+                  aria-label="Add to Wishlist"
+                >
+                  <FaHeart className="text-base" />
                 </button>
-              </Link>
+                <Link
+                  to={`/arview?model=${getModelForProduct(product)}&price=${product.price}`}
+                  className="flex-1 sm:flex-initial"
+                >
+                  <button 
+                    className="w-full p-3.5 px-4 bg-white text-secondary font-semibold rounded-xl hover:bg-secondary/10 transition-colors border border-secondary/20 shadow-sm flexCenter gap-x-2 text-xs sm:text-sm whitespace-nowrap"
+                    aria-label="View in AR"
+                  >
+                    <FaCamera className="text-base" />
+                    <span>3D AR View</span>
+                  </button>
+                </Link>
+              </div>
             </div>
-            <div className="flex items-center gap-x-2 mt-3">
-              <FaTruckFast className="text-lg" />
-              <span className="text-gray-400 flex flex-col gap-1 text-sm medium-14">
-                Delivery Furnitures to your door
-              </span>
-            </div>
-            <hr className="my-3 w-2/3" />
-            <div className="text-gray-400 flex flex-col gap-1 text-[14px]medium-14">
-              <p>Authencity You can Trust</p>
-              <p></p>
-              <p></p>
+
+            {/* Extra Info */}
+            <div className="flex items-center gap-x-3 text-gray-500 text-xs sm:text-sm pt-4 border-t border-gray-200/60">
+              <FaTruckFast className="text-lg text-secondary" />
+              <span>Fast delivery right to your door</span>
             </div>
           </div>
         </div>
