@@ -7,7 +7,8 @@ import { useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
 
 const Login = () => {
-  const { navigate, backendUrl, setToken, getUserCart } = useContext(ShopContext);
+  const { navigate, backendUrl } = useContext(ShopContext);
+  const { token, setToken } = useContext(ProductContext);
   // States: "Login" | "Sign Up"
   const [currState, setCurrState] = useState("Login");
 
@@ -45,9 +46,6 @@ const Login = () => {
           toast.success("Login Successful");
           setToken(data.token);
           localStorage.setItem("token", data.token);
-          if (getUserCart) {
-            getUserCart(data.token);
-          }
           navigate("/");
         } else {
           toast.error(data.message);

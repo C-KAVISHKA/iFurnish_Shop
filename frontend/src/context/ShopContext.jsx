@@ -16,27 +16,12 @@ const ShopContextProvider = (props) => {
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
   const [showSearch, setShowSearch] = useState(true);
-  const [token, setToken] = useState(localStorage.getItem("token") || "");
-  const [cartItems, setCartItems] = useState({});
-
-  const getUserCart = async (userToken) => {
-    try {
-      const response = await axios.post(
-        backendUrl + "/api/cart/get",
-        {},
-        { headers: { Authorization: `Bearer ${userToken}` } }
-      );
-      if (response.data.success && response.data.cartData) {
-        setCartItems(response.data.cartData);
-      }
-    } catch (error) {
-      console.error("Error loading user cart:", error);
-    }
-  };
+  const [token, setToken] = useState('');
+  const [cartItems, setCartItems] = useState([]);
 
   const addToCart = async (itemId, size) => {
     if (!size) {
-      toast.error("Please select a material / option");
+      toast.error("Please select material you want");
       return;
     }
     let cartData = structuredClone(cartItems);
@@ -53,24 +38,10 @@ const ShopContextProvider = (props) => {
     }
 
     setCartItems(cartData);
-    toast.success("Item added to cart successfully!");
-
-    const currentToken = token || localStorage.getItem("token");
-    if (currentToken) {
-      try {
-        await axios.post(
-          backendUrl + "/api/cart/add",
-          { itemId, sizes: size },
-          { headers: { Authorization: `Bearer ${currentToken}` } }
-        );
-      } catch (error) {
-        console.error("Error syncing cart to backend:", error);
-      }
-    }
   };
 
   useEffect(() => {
-    if (cartItems && Object.keys(cartItems).length > 0) {
+    if (cartItems) {
       localStorage.setItem("cartItems", JSON.stringify(cartItems));
     }
   }, [cartItems]);
@@ -94,24 +65,11 @@ const ShopContextProvider = (props) => {
   const updateQuantity = async (itemId, size, quantity) => {
     let cartData = structuredClone(cartItems);
     if (cartData[itemId]) {
-      if (cartData[itemId][size] !== undefined) {
+      if (cartData[itemId][size]) {
         cartData[itemId][size] = quantity;
       }
     }
     setCartItems(cartData);
-
-    const currentToken = token || localStorage.getItem("token");
-    if (currentToken) {
-      try {
-        await axios.post(
-          backendUrl + "/api/cart/update",
-          { itemId, sizes: size, quantity },
-          { headers: { Authorization: `Bearer ${currentToken}` } }
-        );
-      } catch (error) {
-        console.error("Error updating cart on backend:", error);
-      }
-    }
   };
 
   const getCartAmount = () => {
@@ -121,9 +79,7 @@ const ShopContextProvider = (props) => {
         try {
           if (cartItems[items][item] > 0) {
             const product = products.find((product) => product._id === items);
-            if (product) {
-              totalAmount += product.price * cartItems[items][item];
-            }
+            totalAmount += product.price * cartItems[items][item];
           }
         } catch (error) {
           console.log(error);
@@ -149,20 +105,6 @@ const ShopContextProvider = (props) => {
 
   useEffect(() => {
     getProductsData();
-    const storedToken = localStorage.getItem("token");
-    if (storedToken) {
-      setToken(storedToken);
-      getUserCart(storedToken);
-    } else {
-      const storedCart = localStorage.getItem("cartItems");
-      if (storedCart) {
-        try {
-          setCartItems(JSON.parse(storedCart));
-        } catch (e) {
-          console.error(e);
-        }
-      }
-    }
   }, []);
 
   const value = {
@@ -182,8 +124,7 @@ const ShopContextProvider = (props) => {
     setCartItems,
     updateQuantity,
     getCartAmount,
-    backendUrl,
-    getUserCart
+    backendUrl
   };
 
   return (
