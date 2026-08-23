@@ -12,8 +12,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import chatbotIcon from "../assets/chatbot2.png";
 
 const Header = () => {
-  const { getCartCount, navigate } = useContext(ShopContext);
-  const { token, setToken, CartCount } = useContext(ProductContext);
+  const { getCartCount, navigate, token, setToken } = useContext(ShopContext);
   const [menuOpened, setMenuOpened] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [showAITooltip, setShowAITooltip] = useState(false);
@@ -136,11 +135,9 @@ const Header = () => {
               <TbBasket className="text-2xl sm:text-[27px] text-gray-700 hover:text-secondary transition-colors" />
               <motion.span 
                 className="bg-gradient-to-r from-secondary to-[#d4795f] text-white text-[10px] sm:text-[11px] absolute font-bold -top-1.5 -right-2 flexCenter min-w-[18px] h-[18px] px-1 rounded-full shadow-md"
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
                 transition={{ type: "spring", stiffness: 500, damping: 25 }}
               >
-                {CartCount()}
+                {getCartCount ? getCartCount() : 0}
               </motion.span>
             </motion.div>
           </Link>
