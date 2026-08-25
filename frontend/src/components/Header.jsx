@@ -4,16 +4,15 @@ import NavBar from "./NavBar";
 import { FaBarsStaggered, FaRegCircleUser } from "react-icons/fa6";
 import { FaSearch } from "react-icons/fa";
 import { TbBasket } from "react-icons/tb";
-import { RiUserLine } from "react-icons/ri";
-import { RiAiGenerate } from "react-icons/ri";
+import { RiUserLine, RiAiGenerate, RiRobot2Line } from "react-icons/ri";
 import { ShopContext } from "../context/ShopContext";
 import { ProductContext } from "../context/ProductContext";
 import { motion, AnimatePresence } from "framer-motion";
-import chatbotIcon from "../assets/chatbot2.png";
+import AnimatedBotIcon from "./AnimatedBotIcon";
 
 const Header = () => {
   const { getCartCount, navigate } = useContext(ShopContext);
-  const { token, setToken, CartCount } = useContext(ProductContext);
+  const { token, setToken, CartCount, logout: contextLogout } = useContext(ProductContext);
   const [menuOpened, setMenuOpened] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [showAITooltip, setShowAITooltip] = useState(false);
@@ -34,10 +33,16 @@ const Header = () => {
   };
 
   const logout = () => {
-    localStorage.removeItem("token");
-    setToken("");
     setUserMenuOpen(false);
-    navigate("/login");
+    if (contextLogout) {
+      contextLogout();
+    } else {
+      localStorage.removeItem("token");
+      localStorage.removeItem("cartItems");
+      localStorage.removeItem("guestCart");
+      setToken("");
+      navigate("/login");
+    }
   };
 
   return (
@@ -111,23 +116,26 @@ const Header = () => {
             </AnimatePresence>
           </div>
           
-          {/* AI Assistant */}
-          <Link to="/ai-assistant" className="relative cursor-pointer flex items-center">
-            <motion.img
-              src={chatbotIcon}
-              alt="chatbot"
-              className="w-6 h-6 sm:w-8 sm:h-8"
-              animate={{
-                rotate: [0, 10, -10, 0],
-                y: [0, -4, 0],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              whileHover={{ scale: 1.15 }}
-            />
+          {/* Modern AI Assistant */}
+          <Link 
+            to="/ai-assistant" 
+            className="relative cursor-pointer flex items-center group"
+            title="iFurnish AI Interior Concierge"
+          >
+            <motion.div 
+              whileHover={{ scale: 1.12 }} 
+              whileTap={{ scale: 0.95 }}
+              className="relative flex items-center justify-center"
+            >
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-tr from-secondary/20 via-[#d4795f]/25 to-amber-100/70 flexCenter border border-secondary/30 shadow-xs group-hover:border-secondary group-hover:shadow-md group-hover:bg-secondary/30 transition-all duration-300">
+                <AnimatedBotIcon size={22} />
+              </div>
+              {/* Online Pulse Status Dot */}
+              <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500 border-2 border-white"></span>
+              </span>
+            </motion.div>
           </Link>
 
           {/* Cart */}

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ShopContext } from "../context/ShopContext";
+import { ProductContext } from "../context/ProductContext";
 import { FaCamera, FaHeart, FaStar, FaStarHalfAlt } from "react-icons/fa";
 import { TbShoppingBagPlus } from "react-icons/tb";
 import { FaTruckFast } from "react-icons/fa6";
@@ -12,7 +12,7 @@ import { getModelForProduct } from "../utils/modelMapper";
 
 const Product = () => {
   const { productId } = useParams();
-  const { products, currency, addToCart } = useContext(ShopContext);
+  const { products, currency, addToCart } = useContext(ProductContext);
   const [product, setProduct] = useState(null);
   const [image, setImage] = useState("");
   const [size, setSize] = useState("");

@@ -21,6 +21,7 @@ import Verify from "./pages/Verify";
 import About from "./pages/About";
 import { motion, AnimatePresence } from "framer-motion";
 import ScrollToTop from "./components/ScrollToTop";
+import ChatWidget from "./components/ChatWidget";
 
 const pageTransition = {
   initial: { opacity: 0, y: 12 },
@@ -83,6 +84,7 @@ const App = () => {
           </Routes>
         </motion.div>
       </AnimatePresence>
+      <ChatWidget />
     </main>
   );
 };

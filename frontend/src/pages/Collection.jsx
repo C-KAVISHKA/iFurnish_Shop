@@ -199,8 +199,8 @@ const Collection = () => {
                 <button
                   key={i + 1}
                   onClick={() => setCurrentPage(i + 1)}
-                  className={`btn-light !py-1.5 !px-3 text-xs ${
-                    currentPage === i + 1 && "!bg-tertiary text-white"
+                  className={`btn-light !py-1.5 !px-3 text-xs transition-all ${
+                    currentPage === i + 1 ? "!bg-secondary text-white shadow-md scale-105" : "hover:bg-gray-100"
                   }`}
                 >
                   {i + 1}

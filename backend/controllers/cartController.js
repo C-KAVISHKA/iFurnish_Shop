@@ -2,7 +2,8 @@ import userModel from "../models/userModel.js";
 
 const addToCart = async (req, res) => {
   try {
-    const { userId, itemId, sizes } = req.body;
+    const userId = req.body.userId || req.userId;
+    const { itemId, sizes } = req.body;
 
     if (!userId || !itemId || !sizes) {
       return res
@@ -39,10 +40,22 @@ const addToCart = async (req, res) => {
 
 const getUserCart = async (req, res) => {
   try {
-    const { userId } = req.body;
+    const userId = req.body.userId || req.userId;
+
+    if (!userId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "User ID is required" });
+    }
 
     const userData = await userModel.findById(userId);
-    const cartData = await userData.cartData;
+    if (!userData) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    const cartData = userData.cartData || {};
 
     res.json({ success: true, cartData });
   } catch (error) {
@@ -53,7 +66,8 @@ const getUserCart = async (req, res) => {
 
 const updateCart = async (req, res) => {
   try {
-    const { userId, itemId, sizes, quantity } = req.body;
+    const userId = req.body.userId || req.userId;
+    const { itemId, sizes, quantity } = req.body;
 
     // Validate required fields
     if (!userId || !itemId || sizes === undefined || quantity === undefined) {
