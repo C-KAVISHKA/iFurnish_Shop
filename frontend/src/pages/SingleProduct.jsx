@@ -104,7 +104,7 @@ const SingleProduct = () => {
                 <button className="p-3.5 bg-white text-gray-600 rounded-xl hover:text-red-500 hover:bg-red-50 transition-colors border border-gray-100 shadow-sm">
                   <FaHeart />
                 </button>
-                <Link to={`/arview?model=${getModelForProduct(product)}&price=${product.price}`} className="flex-1 sm:flex-initial">
+                <Link to={`/arview?id=${product._id}&model=${getModelForProduct(product)}&price=${product.price}`} className="flex-1 sm:flex-initial">
                   <button className="w-full p-3.5 px-4 bg-white text-secondary font-semibold rounded-xl hover:bg-secondary/10 transition-colors border border-secondary/20 shadow-sm flexCenter gap-x-2 text-xs sm:text-sm whitespace-nowrap" aria-label="View in AR">
                     <FaCamera />
                     <span>3D AR View</span>

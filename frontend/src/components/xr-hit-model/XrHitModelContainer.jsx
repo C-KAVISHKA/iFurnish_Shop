@@ -1,23 +1,30 @@
+import { useState, useEffect, useContext } from "react";
 import { Canvas } from "@react-three/fiber";
 import { ARButton, XR, Controllers } from "@react-three/xr";
 import XrHitModel from "./XrHitModel";
 import { useLocation } from "react-router-dom";
 import Footer from "../Footer";
 import ColorPicker from "../ColorPicker";
-import { useState, useEffect } from "react";
 import DimensionControls from "../DimensionControls";
+import { ProductContext } from "../../context/ProductContext";
+import { TbShoppingBagPlus, TbCheck } from "react-icons/tb";
 
 const XrHitModelContainer = () => {
+  const { products, addToCart, navigate } = useContext(ProductContext);
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
+  const productId = queryParams.get("id");
   const modelPath = queryParams.get("model");
   const [color, setColor] = useState("");
+  const [addedToCart, setAddedToCart] = useState(false);
   const [dimensions, setDimensions] = useState({
     width: 1,
     height: 1,
     depth: 1,
   });
-  const productPrice = parseFloat(queryParams.get("price")) || 100;
+
+  const targetProduct = (products && products.find((p) => p._id === productId)) || (products && products[0]) || null;
+  const productPrice = parseFloat(queryParams.get("price")) || (targetProduct ? parseFloat(targetProduct.price) : 100);
   const [price, setPrice] = useState(productPrice);
   const [isInARMode, setIsInARMode] = useState(false);
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
@@ -35,6 +42,19 @@ const XrHitModelContainer = () => {
     "#8b4513", // Brown
     "#808080", // Gray
   ];
+
+  const colorNames = {
+    "#ff0000": "Red",
+    "#00ff00": "Green",
+    "#0000ff": "Blue",
+    "#ffff00": "Yellow",
+    "#ff00ff": "Magenta",
+    "#00ffff": "Cyan",
+    "#ffffff": "White",
+    "#000000": "Black",
+    "#8b4513": "Brown",
+    "#808080": "Gray",
+  };
 
   const handleColorChange = (newColor) => {
     setColor(newColor);
@@ -80,11 +100,18 @@ const XrHitModelContainer = () => {
 
   const handleReset = () => {
     setDimensions({ width: 1, height: 1, depth: 1 });
+    setColor("");
     setPrice(productPrice);
   };
 
-  const handleSave = () => {
-    alert(`Price saved: $${price.toFixed(2)}`);
+  const handleAddToCart = () => {
+    const activeId = productId || (targetProduct ? targetProduct._id : "custom_product");
+    const colorLabel = colorNames[color] || (color ? color : "Natural");
+    const customVariant = `Custom ($${price.toFixed(2)} | ${dimensions.width.toFixed(2)}m × ${dimensions.height.toFixed(2)}m × ${dimensions.depth.toFixed(2)}m | ${colorLabel})`;
+
+    addToCart(activeId, customVariant);
+    setAddedToCart(true);
+    setTimeout(() => setAddedToCart(false), 4000);
   };
 
   // Handle AR session start
@@ -350,14 +377,14 @@ const XrHitModelContainer = () => {
                   </div>
 
                   {/* Action Buttons */}
-                  <div className="grid grid-cols-2 sm:flex sm:flex-row gap-2 sm:gap-4">
+                  <div className="flex flex-col sm:flex-row gap-3">
                     <button
                       onClick={handleReset}
-                      className="flex-1 flex items-center justify-center bg-white border border-gray-300 text-gray-700 px-3 sm:px-4 py-2 sm:py-3 rounded-lg hover:bg-gray-50 transition-colors shadow-sm text-sm sm:text-base"
+                      className="flex-1 flex items-center justify-center bg-white border border-gray-300 text-gray-700 px-4 py-3 rounded-xl hover:bg-gray-50 transition-all shadow-sm text-sm sm:text-base font-semibold"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        className="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2 text-gray-500"
+                        className="h-4 w-4 sm:h-5 sm:w-5 mr-1.5 text-gray-500"
                         viewBox="0 0 20 20"
                         fill="currentColor"
                       >
@@ -370,23 +397,31 @@ const XrHitModelContainer = () => {
                       Reset
                     </button>
                     <button
-                      onClick={handleSave}
-                      className="flex-1 flex items-center justify-center bg-secondary text-white px-3 sm:px-4 py-2 sm:py-3 rounded-lg hover:bg-secondary/90 transition-colors shadow-md text-sm sm:text-base"
+                      onClick={handleAddToCart}
+                      className={`flex-[1.5] flex items-center justify-center font-semibold text-white px-5 py-3 rounded-xl transition-all shadow-md text-sm sm:text-base ${
+                        addedToCart ? "bg-emerald-600 hover:bg-emerald-700" : "bg-secondary hover:bg-secondary/90"
+                      }`}
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      Save Price
+                      {addedToCart ? (
+                        <>
+                          <TbCheck className="text-xl mr-1.5" />
+                          <span>Added to Cart!</span>
+                        </>
+                      ) : (
+                        <>
+                          <TbShoppingBagPlus className="text-xl mr-1.5" />
+                          <span>Add to Cart (${price.toFixed(2)})</span>
+                        </>
+                      )}
                     </button>
+                    {addedToCart && (
+                      <button
+                        onClick={() => navigate("/cart")}
+                        className="bg-primary text-secondary border border-secondary/30 font-semibold px-4 py-3 rounded-xl hover:bg-secondary/10 transition-all text-sm whitespace-nowrap"
+                      >
+                        View Cart →
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>

@@ -201,6 +201,18 @@ const ProductContextProvider = (props) => {
     }
   };
 
+  // Helper to extract custom price if present in variant name
+  const parseCustomPrice = (variantName, basePrice) => {
+    if (typeof variantName === "string" && variantName.includes("Custom ($")) {
+      const match = variantName.match(/Custom\s*\(\$([\d.]+)/);
+      if (match && match[1]) {
+        const parsed = parseFloat(match[1]);
+        if (!isNaN(parsed) && parsed > 0) return parsed;
+      }
+    }
+    return Number(basePrice) || 0;
+  };
+
   // Calculate Total Cart Amount
   const getCartAmount = () => {
     let totalAmount = 0;
@@ -210,7 +222,8 @@ const ProductContextProvider = (props) => {
           if (cartItems[items][item] > 0) {
             const product = products.find((p) => p._id === items);
             if (product) {
-              totalAmount += product.price * cartItems[items][item];
+              const unitPrice = parseCustomPrice(item, product.price);
+              totalAmount += unitPrice * cartItems[items][item];
             }
           }
         } catch (error) {

@@ -49,6 +49,15 @@ const PlaceOrder = () => {
               products.find((product) => product._id === items)
             );
             if (itemInfo) {
+              if (typeof item === "string" && item.includes("Custom ($")) {
+                const match = item.match(/Custom\s*\(\$([\d.]+)/);
+                if (match && match[1]) {
+                  const parsed = parseFloat(match[1]);
+                  if (!isNaN(parsed) && parsed > 0) {
+                    itemInfo.price = parsed;
+                  }
+                }
+              }
               itemInfo.sizes = item;
               itemInfo.quantity = cartItems[items][item];
               orderItems.push(itemInfo);

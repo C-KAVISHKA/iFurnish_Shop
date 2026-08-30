@@ -49,6 +49,17 @@ const Cart = () => {
     }
   };
 
+  const parseCustomPrice = (variantName, basePrice) => {
+    if (typeof variantName === "string" && variantName.includes("Custom ($")) {
+      const match = variantName.match(/Custom\s*\(\$([\d.]+)/);
+      if (match && match[1]) {
+        const parsed = parseFloat(match[1]);
+        if (!isNaN(parsed) && parsed > 0) return parsed;
+      }
+    }
+    return Number(basePrice) || 0;
+  };
+
   return (
     <div>
       <div className="bg-primary/40 min-h-[60vh] mb-12 sm:mb-16">
@@ -86,6 +97,8 @@ const Cart = () => {
                   );
                   if (!productData) return null;
                   const key = `${item._id}-${item.size}`;
+                  const unitPrice = parseCustomPrice(item.size, productData.price);
+                  const isCustom = typeof item.size === "string" && item.size.includes("Custom (");
 
                   return (
                     <div key={i} className="rounded-2xl bg-white p-3 sm:p-4 shadow-sm border border-gray-100/80">
@@ -112,9 +125,20 @@ const Cart = () => {
                             </button>
                           </div>
                           
-                          <span className="text-[11px] sm:text-xs text-secondary font-semibold my-0.5">
-                            Size: {item.size}
-                          </span>
+                          {isCustom ? (
+                            <div className="flex flex-wrap items-center gap-1.5 my-1">
+                              <span className="text-[10px] font-bold bg-secondary/15 text-secondary px-2 py-0.5 rounded-md border border-secondary/25">
+                                ✨ 3D Custom
+                              </span>
+                              <span className="text-[11px] text-gray-600 font-medium truncate max-w-[260px]">
+                                {item.size.replace(/^Custom\s*\(\$[\d.]+\s*\|\s*/, "").replace(/\)$/, "")}
+                              </span>
+                            </div>
+                          ) : (
+                            <span className="text-[11px] sm:text-xs text-secondary font-semibold my-0.5">
+                              Material: {item.size}
+                            </span>
+                          )}
                           
                           <div className="flexBetween mt-2 pt-1 border-t border-gray-100">
                             <div className="flex items-center ring-1 ring-slate-900/10 rounded-full overflow-hidden bg-primary/40">
@@ -137,7 +161,7 @@ const Cart = () => {
                             
                             <h4 className="font-bold text-sm sm:text-base text-gray-900">
                               {currency}
-                              {(productData.price * (quantities[key] || 1)).toFixed(2)}
+                              {(unitPrice * (quantities[key] || 1)).toFixed(2)}
                             </h4>
                           </div>
                         </div>
@@ -146,6 +170,7 @@ const Cart = () => {
                   );
                 })}
               </div>
+
 
               {/* Order Summary Checkout Card */}
               <div className="w-full bg-white p-4 sm:p-6 rounded-3xl shadow-sm border border-gray-100">

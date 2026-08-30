@@ -134,7 +134,7 @@ const Product = () => {
                   <FaHeart className="text-base" />
                 </button>
                 <Link
-                  to={`/arview?model=${getModelForProduct(product)}&price=${product.price}`}
+                  to={`/arview?id=${product._id}&model=${getModelForProduct(product)}&price=${product.price}`}
                   className="flex-1 sm:flex-initial"
                 >
                   <button 
