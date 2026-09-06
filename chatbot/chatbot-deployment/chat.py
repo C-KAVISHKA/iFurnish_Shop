@@ -5,8 +5,11 @@ import nltk
 nltk.download('punkt', quiet=True)
 import torch
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 try:
     from dotenv import load_dotenv
+    load_dotenv(os.path.join(BASE_DIR, ".env"))
     load_dotenv()
 except ImportError:
     pass
@@ -23,10 +26,11 @@ all_words = []
 tags = []
 
 try:
-    with open('intents.json', 'r') as json_data:
+    intents_path = os.path.join(BASE_DIR, 'intents.json')
+    with open(intents_path, 'r') as json_data:
         intents = json.load(json_data)
 
-    FILE = "data.pth"
+    FILE = os.path.join(BASE_DIR, "data.pth")
     if os.path.exists(FILE):
         data = torch.load(FILE, map_location=device)
         input_size = data["input_size"]
@@ -68,7 +72,7 @@ if GEMINI_API_KEY:
     try:
         from google import genai
         gemini_client = genai.Client(api_key=GEMINI_API_KEY)
-        print("[OK] Google Gemini 3.6 Flash initialized successfully for iFurnish Assistant!")
+        print(f"[OK] Google Gemini ({gemini_model_name}) client initialized successfully!")
     except Exception as e:
         print(f"Warning: Could not initialize Gemini client: {e}")
         gemini_client = None
@@ -108,7 +112,7 @@ def get_response(msg):
 
     # 1. Try Google Gemini
     if gemini_client:
-        models_to_try = [gemini_model_name, "gemini-3.7-flash", "gemini-flash-latest"]
+        models_to_try = [gemini_model_name, "gemini-3.7-flash", "gemini-3.8-flash", "gemini-flash-latest"]
         for m_name in models_to_try:
             try:
                 response = gemini_client.models.generate_content(

@@ -21,13 +21,19 @@ export const handleChat = async (req, res) => {
       return res.json({ response: "How can I assist you with your furniture search today?" });
     }
 
-    const DEFAULT_KEY_B64 = "QVEuQWI4Uk42SWgtVVBsNnZuejM1eWxveVFQT0lIR1RSUE1CWkNWOEZEd1haRUItSG1BTFE=";
     const apiKey =
       (process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY.trim() !== "")
         ? process.env.GEMINI_API_KEY.trim()
-        : Buffer.from(DEFAULT_KEY_B64, "base64").toString("utf-8");
+        : null;
 
-    const models = ["gemini-3.6-flash", "gemini-3.7-flash", "gemini-flash-latest"];
+    if (!apiKey) {
+      console.warn("[iFurnish Chat] GEMINI_API_KEY is not configured in environment variables.");
+      return res.json({
+        response: "Hello! Welcome to iFurnish Shop. We specialize in modern designer furniture with 3D AR room preview. Feel free to browse our collection or ask about delivery and custom orders!"
+      });
+    }
+
+    const models = ["gemini-3.6-flash", "gemini-3.7-flash", "gemini-3.8-flash", "gemini-flash-latest"];
     let replyText = null;
     let lastError = null;
 
