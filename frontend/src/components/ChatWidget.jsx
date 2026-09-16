@@ -123,14 +123,14 @@ const ChatWidget = () => {
       }
       if (backendUrl) {
         endpointsToTry.push(`${backendUrl.replace(/\/+$/, "")}/api/chat`);
-      } else {
-        endpointsToTry.push(
-          "https://ifurnishshop-production-7648.up.railway.app/chat"
-        );
-        endpointsToTry.push(
-          "https://ifurnishshop-production.up.railway.app/api/chat"
-        );
       }
+      // New Railway live production fallbacks
+      endpointsToTry.push(
+        "https://calm-dream-production-6b95.up.railway.app/chat"
+      );
+      endpointsToTry.push(
+        "https://ifurnishshop-production-541c.up.railway.app/api/chat"
+      );
 
       let botText = "";
       let lastError = null;
