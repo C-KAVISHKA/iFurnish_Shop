@@ -9,7 +9,9 @@ const PopularProducts = () => {
 
   useEffect(() => {
     const data = products.filter((item) => item.popular);
-    setpopularProducts(data.slice(0, 5));
+    // Keep the original DB order — the first products in the array
+    // are the flagship 3D-ready ones, so they naturally appear first
+    setpopularProducts(data.slice(0, 8));
   }, [products]);
 
   return (
