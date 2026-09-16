@@ -51,7 +51,7 @@ import base64
 # --- Google Gemini LLM Setup ---
 DEFAULT_KEY_B64 = "QVEuQWI4Uk42TGFrSmhtdGVKdEpkT1F2OFc1QUQyQ09WdzNjVnh0TGw1dXNseENRckxWaUE="
 gemini_client = None
-gemini_model_name = "gemini-3.6-flash"
+gemini_model_name = "gemini-3.1-flash-lite"
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 
 if not GEMINI_API_KEY:
@@ -119,9 +119,9 @@ def get_response(msg):
     if not msg or not msg.strip():
         return "How can I assist you with your furniture search today?"
 
-    # 1. Try Google Gemini
+    # 1. Try Google Gemini (prioritizing 500 RPD Lite models)
     if gemini_client:
-        models_to_try = [gemini_model_name, "gemini-3.7-flash", "gemini-3.8-flash", "gemini-flash-latest"]
+        models_to_try = [gemini_model_name, "gemini-3.5-flash-lite", "gemini-3.6-flash", "gemini-3.7-flash", "gemini-flash-latest"]
         for m_name in models_to_try:
             try:
                 response = gemini_client.models.generate_content(

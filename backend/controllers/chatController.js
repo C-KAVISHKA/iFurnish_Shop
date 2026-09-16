@@ -35,7 +35,8 @@ export const handleChat = async (req, res) => {
       });
     }
 
-    const models = ["gemini-3.6-flash", "gemini-3.7-flash", "gemini-flash-latest"];
+    // Prioritize 500 RPD Flash-Lite models so the free quota doesn't exhaust at 20 requests
+    const models = ["gemini-3.1-flash-lite", "gemini-3.5-flash-lite", "gemini-3.6-flash", "gemini-3.7-flash", "gemini-flash-latest"];
     let replyText = null;
     let lastError = null;
 
