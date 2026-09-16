@@ -16,14 +16,6 @@
 export const getModelForProduct = (product) => {
   if (!product) return "/models/chair1.glb";
 
-  // ── 0. Authoritative Model from Database (if specified) ─────────────────
-  if (product.model) {
-    const customModel = Array.isArray(product.model) ? product.model[0] : product.model;
-    if (typeof customModel === "string" && customModel.trim().endsWith(".glb")) {
-      return customModel.trim();
-    }
-  }
-
   const name     = (product.name || "").toLowerCase();
   const category = (product.category || "").toLowerCase();
   const firstImg = product.image && product.image[0]
@@ -31,13 +23,31 @@ export const getModelForProduct = (product) => {
     : "";
   const filename = firstImg.split("/").pop();
 
-  // ── 1. EXACT image-filename matches for seeded products ─────────────────
-  if (filename.startsWith("chair1") || filename.startsWith("c1"))  return "/models/chair1.glb";  // Shell armchair
-  if (filename.startsWith("chair2") || filename.startsWith("c2"))  return "/models/chair2.glb";  // Wendy egg/pod chair
-  if (filename.startsWith("chair3") || filename.startsWith("c4"))  return "/models/chair3.glb";  // Counter stool
-  if (filename.startsWith("chair4") || filename.startsWith("c5"))  return "/models/chair4.glb";  // High back / bowl lounge
-  if (filename.startsWith("chair5") || filename.startsWith("c3"))  return "/models/chair5.glb";  // Black executive office chair
-  if (filename.startsWith("chair6") || filename.startsWith("s2") || filename.startsWith("s6"))  return "/models/sofa.glb"; // Sofa
+  // ── 1. EXACT image-filename and explicit product visual matches ────────
+  // High Back Chair (chair4.jpg) -> chair4.glb
+  if (filename.includes("chair4") || filename.includes("c4") || filename.includes("c5") || name.includes("high back")) {
+    return "/models/chair4.glb";
+  }
+  // Orange Chair / Shell Chair (chair1.jpg) -> chair1.glb
+  if (filename.includes("chair1") || filename.includes("c1") || name.includes("orange chair")) {
+    return "/models/chair1.glb";
+  }
+  // Wendy Chair / Pod chair (chair2.jpg) -> chair2.glb
+  if (filename.includes("chair2") || filename.includes("c2") || name.includes("wendy")) {
+    return "/models/chair2.glb";
+  }
+  // Counter Stool (chair3.jpg) -> chair3.glb
+  if (filename.includes("chair3") || name.includes("counter stool")) {
+    return "/models/chair3.glb";
+  }
+  // Executive Office Chair (chair5.jpg) -> chair5.glb
+  if (filename.includes("chair5") || filename.includes("c3")) {
+    return "/models/chair5.glb";
+  }
+  // Sofa images -> sofa.glb
+  if (filename.includes("chair6") || filename.includes("s2") || filename.includes("s6") || filename.includes("sofa")) {
+    return "/models/sofa.glb";
+  }
 
   // ── 2. Tables & Desks → table model ────────────────────────────────────
   if (
