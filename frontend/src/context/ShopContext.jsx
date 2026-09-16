@@ -93,7 +93,27 @@ const ShopContextProvider = (props) => {
     try {
       const response = await axios.get(backendUrl + "/api/product/list");
       if (response.data.success) {
-        setProducts(response.data.products);
+        const fetchedProducts = response.data.products;
+        const flagshipNames = [
+          "High Back Chair", 
+          "Office Chair", 
+          "Orange Chair", 
+          "Lounge Chair 20", 
+          "Nordic Oak Chair 30"
+        ];
+        
+        const flagships = [];
+        const others = [];
+        
+        fetchedProducts.forEach(p => {
+          if (flagshipNames.includes(p.name)) {
+            flagships.push(p);
+          } else {
+            others.push(p);
+          }
+        });
+        
+        setProducts([...flagships, ...others]);
       } else {
         toast.error(response.data.message);
       }
