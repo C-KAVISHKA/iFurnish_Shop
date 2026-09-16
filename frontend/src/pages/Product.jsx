@@ -8,7 +8,7 @@ import ProductDescription from "../components/ProductDescription";
 import ProductFeatures from "../components/ProductFeatures";
 import RelatedProducts from "../components/RelatedProducts";
 import Footer from "../components/Footer";
-import { getModelForProduct, hasVerified3DModel } from "../utils/modelMapper";
+import { getModelForProduct } from "../utils/modelMapper";
 
 const Product = () => {
   const { productId } = useParams();
@@ -133,29 +133,18 @@ const Product = () => {
                 >
                   <FaHeart className="text-base" />
                 </button>
-                {hasVerified3DModel(product) ? (
-                  <Link
-                    to={`/arview?id=${product._id}&model=${getModelForProduct(product)}&price=${product.price}`}
-                    className="flex-1 sm:flex-initial"
-                  >
-                    <button 
-                      className="w-full p-3.5 px-4 bg-secondary text-white font-semibold rounded-xl hover:bg-secondary/90 transition-colors shadow-sm flexCenter gap-x-2 text-xs sm:text-sm whitespace-nowrap"
-                      aria-label="View in AR"
-                    >
-                      <FaCamera className="text-base" />
-                      <span>3D AR View</span>
-                    </button>
-                  </Link>
-                ) : (
+                <Link
+                  to={`/arview?id=${product._id}&model=${getModelForProduct(product)}&price=${product.price}`}
+                  className="flex-1 sm:flex-initial"
+                >
                   <button 
-                    disabled
-                    className="flex-1 sm:flex-initial p-3.5 px-4 bg-gray-50 text-gray-400 font-medium rounded-xl border border-gray-200/80 flexCenter gap-x-2 text-xs sm:text-sm whitespace-nowrap cursor-not-allowed opacity-80"
-                    title="3D digital model in production"
+                    className="w-full p-3.5 px-4 bg-white text-secondary font-semibold rounded-xl hover:bg-secondary/10 transition-colors border border-secondary/20 shadow-sm flexCenter gap-x-2 text-xs sm:text-sm whitespace-nowrap"
+                    aria-label="View in AR"
                   >
-                    <FaCamera className="text-base text-gray-300" />
-                    <span>3D AR Coming Soon</span>
+                    <FaCamera className="text-base" />
+                    <span>3D AR View</span>
                   </button>
-                )}
+                </Link>
               </div>
             </div>
 

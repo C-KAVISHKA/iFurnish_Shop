@@ -3,7 +3,6 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
-import { sortProductsWithArFirst } from "../utils/modelMapper";
 
 export const ProductContext = createContext();
 
@@ -29,7 +28,7 @@ const ProductContextProvider = (props) => {
     try {
       const response = await axios.get(`${backendUrl}/api/product/list`);
       if (response.data.success) {
-        setProducts(sortProductsWithArFirst(response.data.products));
+        setProducts(response.data.products);
       } else {
         toast.error(response.data.message);
       }
