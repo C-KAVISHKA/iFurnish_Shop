@@ -1,121 +1,96 @@
 /**
- * Maps a product to its best-matching 3D GLB model path for Three.js WebXR and AR QuickLook.
+ * Master 3D AR Model Mapping and Prioritization Utility
  *
- * Available 3D models in /models/:
- *   chair1.glb        → White organic shell chair, wooden legs (Dining / Nordic / Patio / General)
- *   chair2.glb        → White egg/pod rounded armchair (Wendy Chair)
- *   chair3.glb        → Red Eames-style stool, wire/metal legs (Stool / Bar stool / Ottoman)
- *   chair4.glb        → Peach/tan low rounded bowl lounge chair, metal legs (Poufs / Velvet / Bowl)
- *   chair5.glb        → Black high-back executive ergonomic office chair on wheels (Office / Task / Drafting)
- *   chair6.glb        → Compact side/accent chair
- *   sofa.glb          → Modern 2-seater sofa with cushions (Sofas / Couches / Recliners / Loungers)
- *   table.glb         → Wooden rectangular dining table / desk (Tables / Desks / Benches)
- *   armchair.glb      → Classic upholstered wing/tufted armchair (Armchairs / Accent)
- *   modernarmchair.glb→ Modern lounge armchair (Lounge / Modern)
+ * Flagship products with 100% verified 1:1 matching 3D models:
+ *   1. High Back Chair        → /models/chair4.glb (Curved wood lounge chair, grey cushion)
+ *   2. Orange Chair           → /models/chair1.glb (Molded shell chair, wooden legs)
+ *   3. Wendy Chair            → /models/chair2.glb (Egg/pod rounded armchair)
+ *   4. Adjustable Counter Stool → /models/chair3.glb (Red swivel bar stool with metal wire legs)
+ *   5. Office Chair           → /models/chair5.glb (Black executive ergonomic office chair)
+ *   6. Beverly Sofa           → /models/sofa.glb   (Modern 2-seater teal sofa with cushions)
+ *   7. Grace Sofa             → /models/sofa.glb   (Modern 2-seater teal sofa)
+ *   8. Elegance Dining Table  → /models/table.glb  (Wooden rectangular dining table)
+ *   9. Bellino Wing Chair     → /models/armchair.glb (Classic tufted armchair)
+ *  10. Classic Wooden Desk    → /models/table.glb  (Wooden desk / work table)
+ */
+
+export const VERIFIED_AR_PRODUCTS = [
+  { match: (name, file) => file.includes("chair4") || file.includes("c4") || file.includes("c5") || name.includes("high back"), model: "/models/chair4.glb", priority: 1 },
+  { match: (name, file) => file.includes("chair1") || file.includes("c1") || name.includes("orange chair"), model: "/models/chair1.glb", priority: 2 },
+  { match: (name, file) => file.includes("chair2") || file.includes("1002") || file.includes("c2") || name.includes("wendy"), model: "/models/chair2.glb", priority: 3 },
+  { match: (name, file) => file.includes("chair3") || name.includes("counter stool") || name.includes("adjustable counter"), model: "/models/chair3.glb", priority: 4 },
+  { match: (name, file) => file.includes("chair5") || file.includes("c3") || name.includes("office chair") || name.includes("executive"), model: "/models/chair5.glb", priority: 5 },
+  { match: (name, file) => file.includes("1011") || name.includes("beverly"), model: "/models/sofa.glb", priority: 6 },
+  { match: (name, file) => file.includes("1006") || name.includes("grace sofa"), model: "/models/sofa.glb", priority: 7 },
+  { match: (name, file) => file.includes("image_2.") || name.includes("elegance dining"), model: "/models/table.glb", priority: 8 },
+  { match: (name, file) => file.includes("1013") || name.includes("bellino"), model: "/models/armchair.glb", priority: 9 },
+  { match: (name, file) => file.includes("image_3.") || name.includes("wooden desk"), model: "/models/table.glb", priority: 10 },
+];
+
+/**
+ * Returns true if a product has a verified 1:1 matching 3D GLB model.
+ */
+export const hasVerified3DModel = (product) => {
+  if (!product) return false;
+  if (product.has3D === true) return true;
+  const name = (product.name || "").toLowerCase();
+  const firstImg = product.image && product.image[0] ? product.image[0].toLowerCase() : "";
+  const filename = firstImg.split("/").pop();
+  return VERIFIED_AR_PRODUCTS.some((v) => v.match(name, filename));
+};
+
+/**
+ * Priority number for sorting products with verified AR models to the front row.
+ * Smaller number = appears earlier.
+ */
+export const getArPriority = (product) => {
+  if (!product) return 999;
+  const name = (product.name || "").toLowerCase();
+  const firstImg = product.image && product.image[0] ? product.image[0].toLowerCase() : "";
+  const filename = firstImg.split("/").pop();
+  const found = VERIFIED_AR_PRODUCTS.find((v) => v.match(name, filename));
+  return found ? found.priority : 999;
+};
+
+/**
+ * Sorts any product list so that verified 3D AR products sit at the FRONT of the row.
+ */
+export const sortProductsWithArFirst = (productList) => {
+  if (!Array.isArray(productList)) return [];
+  return [...productList].sort((a, b) => getArPriority(a) - getArPriority(b));
+};
+
+/**
+ * Maps a product to its verified 3D GLB model path.
  */
 export const getModelForProduct = (product) => {
   if (!product) return "/models/chair1.glb";
 
-  const name     = (product.name || "").toLowerCase();
-  const category = (product.category || "").toLowerCase();
-  const firstImg = product.image && product.image[0]
-    ? product.image[0].toLowerCase()
-    : "";
+  const name = (product.name || "").toLowerCase();
+  const firstImg = product.image && product.image[0] ? product.image[0].toLowerCase() : "";
   const filename = firstImg.split("/").pop();
 
-  // ── 1. EXACT image-filename and explicit product visual matches ────────
-  // High Back Chair (chair4.jpg) -> chair4.glb
-  if (filename.includes("chair4") || filename.includes("c4") || filename.includes("c5") || name.includes("high back")) {
-    return "/models/chair4.glb";
-  }
-  // Orange Chair / Shell Chair (chair1.jpg) -> chair1.glb
-  if (filename.includes("chair1") || filename.includes("c1") || name.includes("orange chair")) {
-    return "/models/chair1.glb";
-  }
-  // Wendy Chair / Pod chair (chair2.jpg) -> chair2.glb
-  if (filename.includes("chair2") || filename.includes("c2") || name.includes("wendy")) {
-    return "/models/chair2.glb";
-  }
-  // Counter Stool (chair3.jpg) -> chair3.glb
-  if (filename.includes("chair3") || name.includes("counter stool")) {
-    return "/models/chair3.glb";
-  }
-  // Executive Office Chair (chair5.jpg) -> chair5.glb
-  if (filename.includes("chair5") || filename.includes("c3")) {
-    return "/models/chair5.glb";
-  }
-  // Sofa images -> sofa.glb
-  if (filename.includes("chair6") || filename.includes("s2") || filename.includes("s6") || filename.includes("sofa")) {
-    return "/models/sofa.glb";
+  // 1. Check exact flagship match
+  const matchedFlagship = VERIFIED_AR_PRODUCTS.find((v) => v.match(name, filename));
+  if (matchedFlagship) {
+    return matchedFlagship.model;
   }
 
-  // ── 2. Tables & Desks → table model ────────────────────────────────────
+  // 2. Tables & Desks
+  const category = (product.category || "").toLowerCase();
   if (
     category === "tables" || category === "table" ||
-    category === "desks"  || category === "desk"  ||
-    name.includes("table") || name.includes("desk") ||
-    name.includes("bookshelf") || name.includes("bench")
+    category === "desks" || category === "desk" ||
+    name.includes("table") || name.includes("desk")
   ) {
     return "/models/table.glb";
   }
 
-  // ── 3. Sofas / Couches / Recliners / Sectionals / Loungers ─────────────
-  if (
-    category === "sofas" || category === "sofa" ||
-    name.includes("sofa")     || name.includes("couch")    ||
-    name.includes("recliner") || name.includes("sectional") ||
-    name.includes("lounger")  || name.includes("sun")
-  ) {
+  // 3. Sofas & Couches
+  if (category === "sofas" || category === "sofa" || name.includes("sofa") || name.includes("couch")) {
     return "/models/sofa.glb";
   }
 
-  // ── 4. Chair sub-types → best visual match ─────────────────────────────
-
-  // Office / Executive / Ergonomic / Task / Drafting → black office chair (chair5)
-  if (
-    name.includes("office")    || name.includes("executive") ||
-    name.includes("ergonomic") || name.includes("task")      ||
-    name.includes("drafting")
-  ) {
-    return "/models/chair5.glb";
-  }
-
-  // Stools / Bar stools / Ottomans → stool model (chair3)
-  if (
-    name.includes("stool") || name.includes("bar") ||
-    name.includes("counter") || name.includes("ottoman")
-  ) {
-    return "/models/chair3.glb";
-  }
-
-  // Poufs / Velvet chairs → low lounge bowl chair (chair4)
-  if (name.includes("pouf") || name.includes("velvet")) {
-    return "/models/chair4.glb";
-  }
-
-  // Wing / Tufted / Accent armchairs → classic armchair
-  if (
-    name.includes("armchair") || name.includes("accent") ||
-    name.includes("wing")     || name.includes("tufted")
-  ) {
-    return "/models/armchair.glb";
-  }
-
-  // Lounge / Modern chairs → modern lounge armchair
-  if (name.includes("lounge") || name.includes("modern")) {
-    return "/models/modernarmchair.glb";
-  }
-
-  // Nordic / Oak / Bellino / Dining / Patio / Outdoor chairs → clean shell chair (chair1)
-  if (
-    name.includes("nordic") || name.includes("oak") ||
-    name.includes("bellino") || name.includes("patio") ||
-    name.includes("outdoor") || name.includes("dining")
-  ) {
-    return "/models/chair1.glb";
-  }
-
-  // ── 5. Default Fallback ─────────────────────────────────────────────────
+  // Default fallback
   return "/models/chair1.glb";
 };
-

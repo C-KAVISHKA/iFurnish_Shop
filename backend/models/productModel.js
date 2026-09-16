@@ -10,6 +10,8 @@ const poductSchema = new mongoose.Schema({
   subCategory: { type: String, required: true },
   sizes: { type: Array, required: true },
   popular: { type: Boolean },
+  model: { type: Array, required: false },
+  has3D: { type: Boolean, default: false },
   date: { type: Number, required: true },
 });
 

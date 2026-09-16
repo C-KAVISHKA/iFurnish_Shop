@@ -2,7 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { FaStar } from "react-icons/fa6";
 import { motion } from "framer-motion";
-import { TbShoppingBagPlus } from "react-icons/tb";
+import { TbShoppingBagPlus, TbCube } from "react-icons/tb";
+import { hasVerified3DModel } from "../utils/modelMapper";
 
 const Item = ({ product }) => {
   return (
@@ -17,6 +18,12 @@ const Item = ({ product }) => {
         to={`/product/${product._id}`}
         className="relative overflow-hidden rounded-xl sm:rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100/50 flexCenter h-36 xs:h-44 sm:h-48 w-full mb-2 sm:mb-3"
       >
+        {hasVerified3DModel(product) && (
+          <div className="absolute top-2.5 left-2.5 z-10 flex items-center gap-1 bg-secondary text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-md">
+            <TbCube className="text-xs" />
+            <span>3D AR Ready</span>
+          </div>
+        )}
         <motion.img
           src={product.image[0]}
           alt={product.name}
