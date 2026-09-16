@@ -8,13 +8,14 @@ import ColorPicker from "../ColorPicker";
 import DimensionControls from "../DimensionControls";
 import { ProductContext } from "../../context/ProductContext";
 import { TbShoppingBagPlus, TbCheck } from "react-icons/tb";
+import { getModelForProduct } from "../../utils/modelMapper";
 
 const XrHitModelContainer = () => {
   const { products, addToCart, navigate } = useContext(ProductContext);
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const productId = queryParams.get("id");
-  const modelPath = queryParams.get("model");
+  const rawModelPath = queryParams.get("model");
   const [color, setColor] = useState("");
   const [addedToCart, setAddedToCart] = useState(false);
   const [dimensions, setDimensions] = useState({
@@ -24,6 +25,7 @@ const XrHitModelContainer = () => {
   });
 
   const targetProduct = (products && products.find((p) => p._id === productId)) || (products && products[0]) || null;
+  const effectiveModelPath = (targetProduct ? getModelForProduct(targetProduct) : null) || rawModelPath || "/models/chair1.glb";
   const productPrice = parseFloat(queryParams.get("price")) || (targetProduct ? parseFloat(targetProduct.price) : 100);
   const [price, setPrice] = useState(productPrice);
   const [isInARMode, setIsInARMode] = useState(false);
@@ -252,7 +254,7 @@ const XrHitModelContainer = () => {
                     >
                       <Controllers />
                       <XrHitModel
-                        modelPath={modelPath}
+                        modelPath={effectiveModelPath}
                         color={color}
                         dimensions={dimensions}
                         availableColors={availableColors}
@@ -266,7 +268,7 @@ const XrHitModelContainer = () => {
                   {isIOS ? (
                     <a
                       rel="ar"
-                      href={modelPath ? modelPath + ".usdz" : ""}
+                      href={effectiveModelPath ? effectiveModelPath + ".usdz" : ""}
                       className="flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-2 sm:py-3 px-4 sm:px-8 rounded-full text-base sm:text-lg font-medium shadow-md sm:shadow-lg hover:shadow-xl transform transition hover:-translate-y-1 focus:ring-4 focus:ring-purple-500/50"
                     >
                       <svg
