@@ -49,12 +49,12 @@ except Exception as e:
 import base64
 
 # --- Google Gemini LLM Setup ---
-DEFAULT_KEY_B64 = "QVEuQWI4Uk42TGFrSmhtdGVKdEpkT1F2OFc1QUQyQ09WdzNjVnh0TGw1dXNseENRckxWaUE="
+DEFAULT_KEY_B64 = ""
 gemini_client = None
 gemini_model_name = "gemini-3.1-flash-lite"
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 
-if not GEMINI_API_KEY:
+if not GEMINI_API_KEY and DEFAULT_KEY_B64:
     try:
         GEMINI_API_KEY = base64.b64decode(DEFAULT_KEY_B64).decode("utf-8")
     except Exception:

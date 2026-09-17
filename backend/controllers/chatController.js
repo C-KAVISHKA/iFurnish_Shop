@@ -14,7 +14,7 @@ Guidelines:
 - Act as an interior design consultant when asked about matching colors, styles (Scandinavian, Mid-Century, Minimalist, Japandi, Industrial), and room planning.
 - Answer questions in any language the user speaks.`;
 
-const DEFAULT_KEY_B64 = "QVEuQWI4Uk42TGFrSmhtdGVKdEpkT1F2OFc1QUQyQ09WdzNjVnh0TGw1dXNseENRckxWaUE=";
+const DEFAULT_KEY_B64 = "";
 
 export const handleChat = async (req, res) => {
   try {
